@@ -1,2 +1,283 @@
-<!doctype html><html lang="ru"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="description" content="Вершки — творческие занятия вместе с бабушкой и дедушкой."><title>Вершки — творчество вместе</title><link rel="stylesheet" href="style.css"></head><body>
-<main aria-label="Вершки — творчество вместе"><div id="viewport"><div id="scene"><p class="intro">Ответь на несколько вопросов —<br>подберём творческое занятие, которое можно попробовать вместе с бабушкой или дедушкой.</p><div id="art"></div><a class="more" href="#about">подробнее →</a><div class="logo" aria-label="Вершки"></div></div></div><section id="about" hidden><button class="close" aria-label="Закрыть">×</button><p class="eyebrow">ВЕРШКИ · ВРЕМЯ ВМЕСТЕ</p><h1>Творчество<br>сближает.</h1><p>Здесь можно найти занятие, которое будет интересно попробовать вместе с бабушкой или дедушкой.</p><p class="muted">Пока знакомимся: зажми бусинку или звезду: тяни вдоль лески, чтобы двигать, и поперёк, чтобы вращать. На телефоне — пальцем.</p><button class="back">Вернуться к бусинкам ↗</button></section><div class="controls"><span>вдоль — двигай · поперёк — вращай</span><button id="motion" aria-label="Приостановить анимацию" title="Приостановить анимацию">Ⅱ</button><button id="reset" aria-label="Вернуть исходное положение" title="Вернуть исходное положение">↺</button></div></main><script src="bead-surface.js"></script><script src="string-motion.js"></script><script src="app.js"></script></body></html>
+<!doctype html>
+<html lang="ru">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <meta
+      name="description"
+      content="Вершки — творческие занятия вместе с бабушкой и дедушкой. Найдите новый повод побыть вместе."
+    />
+    <meta name="theme-color" content="#e4f371" />
+    <title>Вершки — творчество вместе</title>
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <main>
+      <section class="hero" aria-label="Вершки — творчество вместе">
+        <p class="intro">
+          Ответь на несколько вопросов —<br />
+          подберём творческое занятие, которое можно попробовать вместе с
+          бабушкой или дедушкой.
+        </p>
+        <h1 class="brand" aria-label="Вершки">
+          <span>в</span><span>е</span><span>р</span><span>ш</span><span>к</span
+          ><span>и</span>
+        </h1>
+        <div class="hero-art" aria-hidden="true">
+          <div class="thread thread-back">
+            <img src="assets/figma/a1a5b.svg" alt="" />
+          </div>
+          <div class="bead blue hero-blue">
+            <span>в</span><i class="hole"></i>
+          </div>
+          <img class="hero-star" src="assets/hero-star.png" alt="" />
+          <div class="bead pink hero-pink">
+            <span>е</span><i class="hole"></i>
+          </div>
+          <div class="thread thread-front">
+            <img src="assets/figma/feeb6.svg" alt="" />
+          </div>
+        </div>
+        <a class="pill hero-more" href="#about">подробнее →</a>
+      </section>
+
+      <section
+        class="conversation panel"
+        id="about"
+        aria-label="Знакомая переписка"
+      >
+        <div class="profile">
+          <div class="avatar">
+            <img src="assets/figma/e0332.png" alt="" /><img
+              src="assets/figma/7fb9a.png"
+              alt="Бабуля"
+            />
+          </div>
+          <p class="profile-name">Бабуля!</p>
+          <p class="profile-handle">@lydya_rez1967</p>
+          <div
+            class="profile-gallery"
+            aria-label="Медиатека — пример из макета"
+          >
+            <span class="selected">фото</span><span>аудио</span
+            ><span>голосовые</span>
+            <div></div>
+            <div></div>
+            <div></div>
+            <div></div>
+            <div></div>
+            <div></div>
+          </div>
+        </div>
+        <div class="messages">
+          <div class="message incoming">
+            <p class="sender">Бабуля!</p>
+            <p class="bubble">
+              Привет, Танечка! как у тебя дела Всё хорошо? Когда заглянешь ко
+              мне, очень жду тебя пить чай!
+            </p>
+            <p class="receipt">Read 9:39</p>
+          </div>
+          <div class="message outgoing first-reply">
+            <p class="bubble">Привет! Всё хорошо, на учёбе</p>
+          </div>
+          <div class="message outgoing second-reply">
+            <p class="bubble">Не смогу зайти :(</p>
+            <p class="receipt">Read 9:39</p>
+          </div>
+          <div class="message voice">
+            <div
+              class="voice-bubble"
+              aria-label="Голосовое сообщение, 5 секунд — иллюстрация"
+            >
+              <span class="play" aria-hidden="true">▶</span
+              ><span class="wave" aria-hidden="true"
+                ><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i
+                ><i></i><i></i><i></i><i></i><i></i><i></i></span
+              ><span class="duration">0:05</span
+              ><span class="reaction" aria-hidden="true">😭</span>
+            </div>
+            <p class="receipt">Read 9:39</p>
+          </div>
+        </div>
+      </section>
+
+      <section class="familiar" aria-labelledby="familiar-heading">
+        <h2
+          class="bead-title"
+          id="familiar-heading"
+          aria-label="Знакомо?"
+          data-letters="знакомо?"
+        ></h2>
+        <p class="familiar-intro">
+          Мы можем быть близки с бабушками и дедушками —<br />
+          и всё равно не знать, чем заняться вместе.
+        </p>
+        <div class="stats-layout">
+          <ul class="stat-labels">
+            <li>общаются раз в неделю или реже</li>
+            <li>трудно найти совместное занятие</li>
+            <li>говорят о повседневных делах и быте</li>
+            <li>хотели бы попробовать совместное творческое занятие</li>
+          </ul>
+          <div
+            class="stats-art"
+            aria-label="Цифры из макета: 20%, 26%, 40%, 10%"
+          >
+            <div class="stat-orbit"></div>
+            <div class="stat-ball cream stat-20"><span>20%</span></div>
+            <div class="stat-ball blue stat-26"><span>26%</span></div>
+            <div class="stat-ball pink stat-40"><span>40%</span></div>
+            <div class="stat-ball lime stat-10"><span>10%</span></div>
+            <div class="stat-ball yellow"></div>
+          </div>
+        </div>
+      </section>
+
+      <section class="together panel" aria-labelledby="together-heading">
+        <div class="together-stars" aria-hidden="true">
+          <div><img src="assets/figma/6ae23.svg" alt="" /></div>
+          <div><img src="assets/figma/2c429.svg" alt="" /></div>
+          <div><img src="assets/figma/2c429.svg" alt="" /></div>
+        </div>
+        <h2
+          class="bead-title filled"
+          id="together-heading"
+          aria-label="Вместе"
+          data-letters="вместе"
+        ></h2>
+        <p class="together-copy">
+          Творчество может стать способом побыть вместе. Создавая что-то, мы
+          узнаём друг друга по-новому.
+        </p>
+        <div class="polaroids" aria-label="Места для фотографий из макета">
+          <div class="polaroid"><div></div></div>
+          <div class="polaroid"><div></div></div>
+          <div class="polaroid"><div></div></div>
+        </div>
+      </section>
+
+      <section class="story" aria-label="Новый повод побыть вместе">
+        <p class="story-intro">
+          Таким поводом может стать творчество.<br />
+          Оно помогает выйти из семейных ролей<br />
+          и попробовать что-то новое.
+        </p>
+        <div class="story-art" aria-hidden="true">
+          <div class="story-star">
+            <img src="assets/figma/29220.svg" alt="" />
+          </div>
+          <div class="story-thread st-one">
+            <img src="assets/figma/3633f.svg" alt="" />
+          </div>
+          <div class="story-thread st-two">
+            <img src="assets/figma/58758.svg" alt="" />
+          </div>
+          <div class="story-thread st-three">
+            <img src="assets/figma/8daec.svg" alt="" />
+          </div>
+          <div class="story-thread st-four">
+            <img src="assets/figma/1e3d4.svg" alt="" />
+          </div>
+          <div class="bead blue story-blue">
+            <span>м</span><i class="hole"></i>
+          </div>
+          <div class="bead pink story-pink">
+            <span>ы</span><i class="hole"></i>
+          </div>
+          <img class="shared-photo" src="assets/figma/ffa82.png" alt="" />
+          <div class="story-triangle">
+            <img src="assets/figma/da00b.svg" alt="" />
+          </div>
+        </div>
+        <p class="story-outro">
+          Так бабушка, дедушка и внук<br />
+          оказываются в одном процессе.<br />
+          Можно вместе выбирать, придумывать<br />
+          и узнавать друг друга с другой стороны.
+        </p>
+      </section>
+
+      <section class="test panel" aria-labelledby="test-heading">
+        <h2
+          class="bead-title"
+          id="test-heading"
+          aria-label="А что для вас"
+          data-letters="ачтодлява"
+        ></h2>
+        <p>
+          Ответьте на несколько вопросов о вас и вашем совместном времени — и мы
+          подберём занятие, которое захочется попробовать вместе.
+        </p>
+        <button
+          class="pill"
+          id="test-link"
+          type="button"
+          aria-describedby="test-status"
+        >
+          перейти →
+        </button>
+        <span class="sr-only" id="test-status">Тест скоро появится</span>
+      </section>
+
+      <section class="faq" aria-labelledby="faq-heading">
+        <h2
+          class="bead-title"
+          id="faq-heading"
+          aria-label="Вопросы и ответы"
+          data-letters="f&q"
+        ></h2>
+        <div class="faq-grid">
+          <details>
+            <summary>Без общих интересов не сблизиться?</summary>
+            <p>
+              Общие интересы могут появиться в процессе. Начните с простого
+              занятия, которое вам обоим любопытно попробовать.
+            </p>
+          </details>
+          <details>
+            <summary>Поколения правда отдаляются?</summary>
+            <p>
+              У каждого поколения свой опыт и привычки. Совместное время
+              помогает лучше понять друг друга и найти свои точки
+              соприкосновения.
+            </p>
+          </details>
+          <details>
+            <summary>Совместный досуг правда так важен?</summary>
+            <p>
+              Совместный досуг даёт повод быть рядом, делиться впечатлениями и
+              создавать общие воспоминания.
+            </p>
+          </details>
+          <details>
+            <summary>Нам действительно не о чем говорить?</summary>
+            <p>
+              Иногда для разговора нужен новый повод. Можно вместе рассмотреть
+              старые фотографии, приготовить знакомое блюдо или попробовать
+              что-то новое.
+            </p>
+          </details>
+          <details>
+            <summary>Творчество действительно сближает?</summary>
+            <p>
+              Совместное творчество помогает обмениваться идеями и узнавать друг
+              друга. Важен сам процесс и внимание друг к другу, а не идеальный
+              результат.
+            </p>
+          </details>
+          <details>
+            <summary>Разный возраст мешает близости?</summary>
+            <p>
+              Разный возраст не мешает проводить время вместе. Выберите удобный
+              для обоих темп и занятие, в котором каждому найдётся место.
+            </p>
+          </details>
+        </div>
+      </section>
+    </main>
+    <footer aria-hidden="true"></footer>
+    <div class="notice" role="status" hidden>Тест скоро появится</div>
+    <script src="landing.js"></script>
+  </body>
+</html>
