@@ -818,3 +818,31 @@ main,
   perspective: 1200px;
   transform-style: preserve-3d;
 }
+
+/* All six letters travel together on the same circular thread. */
+.hero-orbit .thread { display: none; }
+.hero-orbit { perspective: none; }
+.hero-orbit:focus-visible { outline: 2px dashed #999; outline-offset: -8px; }
+.hero-orbit-thread {
+  position: absolute; left: 106rem; top: 350rem;
+  width: 1300rem; height: 1300rem;
+  border: 2rem solid #696969; border-radius: 50%;
+}
+.hero-orbit .hero-orbit-item {
+  left: 0; top: 0; pointer-events: auto; cursor: grab;
+  touch-action: pan-y; user-select: none; -webkit-user-select: none;
+  will-change: transform;
+}
+.hero-orbit.is-dragging .hero-orbit-item { cursor: grabbing; }
+.hero-orbit .bead { width: 394rem; height: 394rem; }
+.hero-orbit .bead span {
+  inset: 0; display: grid; place-items: center;
+  font-size: 239rem; letter-spacing: 0; transform: none;
+}
+.hero-orbit .blue span { color: #76a8d8; }
+.hero-orbit .pink span { color: #c58cce; }
+.hero-orbit .bead .hole {
+  left: 46rem; top: 245rem; transform: rotate(-35deg);
+  background: #80b1df44;
+}
+.hero-orbit .pink .hole { background: #bf8dc844; }

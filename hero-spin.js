@@ -1,198 +1,74 @@
 "use strict";
 (() => {
-  const hero = document.querySelector(".hero");
-  const reduced = matchMedia("(prefers-reduced-motion: reduce)");
-  const starImage = hero.querySelector(".hero-star");
-  const star = document.createElement("div");
-  star.className = "hero-star";
-  starImage.replaceWith(star);
-  const normalize = (a) => {
-    const n = Math.hypot(...a);
-    return a.map((v) => v / n);
+  const hero = document.querySelector('.hero');
+  const art = hero.querySelector('.hero-art');
+  const reduced = matchMedia('(prefers-reduced-motion: reduce)');
+  art.classList.add('hero-orbit');
+  art.setAttribute('role', 'slider');
+  art.setAttribute('aria-label', 'Бусины ВЕРШКИ — вращайте окружность перетаскиванием или стрелками');
+  art.setAttribute('aria-valuemin', '0');
+  art.setAttribute('aria-valuemax', '359');
+  art.tabIndex = 0;
+  const ring = document.createElement('div');
+  ring.className = 'hero-orbit-thread';
+  ring.setAttribute('aria-hidden', 'true');
+  art.prepend(ring);
+  const blue = art.querySelector('.hero-blue');
+  const pink = art.querySelector('.hero-pink');
+  const star = art.querySelector('.hero-star');
+  star.draggable = false;
+  const items = [{el:blue,phase:-.7},{el:star,phase:0},{el:pink,phase:.7}];
+  ['р','ш','к','и'].forEach((letter,i)=>{
+    const el=(i%2 ? pink : blue).cloneNode(true);
+    el.classList.remove('hero-blue','hero-pink');
+    el.querySelector('span').textContent=letter;
+    art.append(el);
+    items.push({el,phase:1.68+i*.98});
+  });
+  items.forEach(({el})=>{el.classList.add('hero-orbit-item');el.setAttribute('aria-hidden','true');});
+  let angle=0,velocity=0,drag=null,visible=true,last=0,raf=0;
+  const render=()=>{
+    items.forEach(({el,phase})=>{
+      const a=phase+angle;
+      el.style.transform=`translate(-50%, -50%) translate(${756+650*Math.sin(a)}rem, ${1000-650*Math.cos(a)}rem) rotate(${a*.24}rad)`;
+    });
+    art.dataset.rotation=angle.toFixed(4);
+    art.setAttribute('aria-valuenow',String(Math.floor(((angle*180/Math.PI)%360+360)%360)));
   };
-  const states = [
-    {
-      el: hero.querySelector(".hero-blue"),
-      axis: normalize([0.63, -0.46, -0.6257]),
-      label: "Голубая бусина",
-      glyph: {
-        text: "в",
-        x: 269,
-        y: 129,
-        rotation: -34.4,
-        size: 239.12,
-        color: "#76a8d8",
-      },
-    },
-    { el: star, axis: normalize([1, 0.18, 0]), label: "Лаймовая звезда" },
-    {
-      el: hero.querySelector(".hero-pink"),
-      axis: normalize([0.73, 0.39, -0.56125]),
-      label: "Розовая бусина",
-      glyph: {
-        text: "е",
-        x: 300,
-        y: 244,
-        rotation: 34.76,
-        size: 239.12,
-        color: "#c58cce",
-      },
-    },
-  ].map((s) => ({
-    ...s,
-    angle: 0,
-    velocity: 0,
-    drag: false,
-    manual: false,
-    lastTime: 0,
-    renderer: null,
-    lastRendered: null,
-  }));
-  const starState = states.find(state => state.el === star);
-  star.append(starImage);
-  starImage.removeAttribute("class");
-  starImage.style.cssText = "width:100%;height:100%;object-fit:contain";
-  createStarSurface(star, starState.axis).then(renderer => {
-    starImage.remove();
-    starState.renderer = renderer;
-    starState.lastRendered = null;
-  }).catch(error => console.warn("Star renderer:", error.message));
-  let visible = true,
-    last = 0,
-    raf = 0;
-  new IntersectionObserver((entries) => (visible = entries[0].isIntersecting), {
-    rootMargin: "100px",
-  }).observe(hero);
-  document.fonts.ready.then(() =>
-    states.forEach((state) => {
-      if (!state.glyph) return;
-      try {
-        state.renderer = createBeadSurface(state.el, {
-          width: 394.17,
-          height: 394.17,
-          center: [197.085, 197.085],
-          radius: [196, 196],
-          axis: state.axis,
-          glyph: state.glyph,
-        });
-        state.renderer(state.angle);
-      } catch {
-        const glyph = state.el.querySelector(":scope>span");
-        glyph.style.visibility = "visible";
-        state.renderer = (angle) => {
-          glyph.style.rotate = `${angle * 0.35}rad`;
-        };
-      }
-    }),
-  );
-  states.forEach((state) => {
-    const el = state.el;
-    el.classList.add("spin-control");
-    el.setAttribute("role", "slider");
-    el.tabIndex = 0;
-    el.setAttribute(
-      "aria-label",
-      `${state.label} — вращайте перетаскиванием или стрелками`,
-    );
-    el.setAttribute("aria-valuemin", "0");
-    el.setAttribute("aria-valuemax", "359");
-    el.setAttribute("aria-valuenow", "0");
-    el.querySelectorAll("span,i").forEach((child) =>
-      child.setAttribute("aria-hidden", "true"),
-    );
-    el.addEventListener("pointerdown", (event) => {
-      if (event.button !== 0) return;
-      state.drag = true;
-      state.manual = true;
-      state.velocity = 0;
-      state.lastX = event.clientX;
-      state.lastY = event.clientY;
-      state.lastTime = event.timeStamp;
-      el.setPointerCapture(event.pointerId);
-      el.classList.add("is-spinning");
-    });
-    el.addEventListener("pointermove", (event) => {
-      if (!state.drag) return;
-      const dx = event.clientX - state.lastX,
-        dy = event.clientY - state.lastY;
-      const radius = Math.max(45, el.clientWidth / 2);
-      const [ax, ay] = state.axis;
-      const projection = dx * 0.9 + dy * 0.65;
-      const delta = projection / radius;
-      const dt = Math.max(0.008, (event.timeStamp - state.lastTime) / 1000);
-      state.angle += delta;
-      state.velocity = Math.max(-8, Math.min(8, delta / dt));
-      state.lastX = event.clientX;
-      state.lastY = event.clientY;
-      state.lastTime = event.timeStamp;
-      event.preventDefault();
-    });
-    const release = (event) => {
-      if (event.timeStamp - state.lastTime > 100) state.velocity = 0;
-      state.drag = false;
-      el.classList.remove("is-spinning");
-    };
-    el.addEventListener("pointerup", release);
-    el.addEventListener("pointercancel", () => {
-      state.drag = false;
-      state.velocity = 0;
-      el.classList.remove("is-spinning");
-    });
-    el.addEventListener("lostpointercapture", () => {
-      state.drag = false;
-      el.classList.remove("is-spinning");
-    });
-    el.addEventListener("keydown", (event) => {
-      if (
-        ["ArrowLeft", "ArrowRight", "ArrowUp", "ArrowDown", "Home"].includes(
-          event.key,
-        )
-      ) {
-        event.preventDefault();
-        state.manual = true;
-        state.velocity = 0;
-        if (event.key === "Home") state.angle = 0;
-        else
-          state.angle += ["ArrowLeft", "ArrowUp"].includes(event.key)
-            ? -0.3
-            : 0.3;
-      }
-    });
+  new IntersectionObserver(entries=>visible=entries[0].isIntersecting).observe(hero);
+  art.addEventListener('pointerdown',event=>{
+    if(event.button!==0 || !event.target.closest('.hero-orbit-item'))return;
+    drag={x:event.clientX,time:event.timeStamp};velocity=0;
+    art.setPointerCapture(event.pointerId);art.classList.add('is-dragging');
   });
-  function tick(time) {
-    const dt = last ? Math.min((time - last) / 1000, 0.04) : 0;
-    last = time;
-    if (visible && !document.hidden) {
-      for (const state of states) {
-        if (!state.drag && !document.body.classList.contains("motion-paused")) {
-          if (!reduced.matches) {
-            state.angle += state.velocity * dt;
-            state.velocity *= Math.exp(-1.5 * dt);
-            if (!state.manual) state.angle += dt * 0.19;
-          }
-        }
-        if (state.lastRendered !== state.angle) {
-          if (state.renderer) state.renderer(state.angle);
-
-          state.el.dataset.rotation = state.angle.toFixed(4);
-          state.el.setAttribute(
-            "aria-valuenow",
-            String(
-              Math.floor(((((state.angle * 180) / Math.PI) % 360) + 360) % 360),
-            ),
-          );
-          state.lastRendered = state.angle;
-        }
-      }
+  art.addEventListener('pointermove',event=>{
+    if(!drag)return;
+    const scale=art.getBoundingClientRect().width/1512;
+    const delta=(event.clientX-drag.x)/(650*scale);
+    angle+=delta;
+    velocity=Math.max(-1.5,Math.min(1.5,delta/Math.max(.016,(event.timeStamp-drag.time)/1000)));
+    drag={x:event.clientX,time:event.timeStamp};render();
+  });
+  const release=event=>{
+    if(drag&&event.timeStamp-drag.time>100)velocity=0;
+    drag=null;art.classList.remove('is-dragging');
+  };
+  art.addEventListener('pointerup',release);
+  art.addEventListener('pointercancel',()=>{velocity=0;drag=null;art.classList.remove('is-dragging');});
+  art.addEventListener('lostpointercapture',release);
+  art.addEventListener('keydown',event=>{
+    if(!['ArrowLeft','ArrowRight','Home'].includes(event.key))return;
+    event.preventDefault();velocity=0;
+    angle=event.key==='Home'?0:angle+(event.key==='ArrowLeft'?-.35:.35);render();
+  });
+  function tick(time){
+    const dt=last?Math.min(.04,(time-last)/1000):0;last=time;
+    if(visible&&!document.hidden&&!drag&&!reduced.matches&&!document.body.classList.contains('motion-paused')&&!art.matches(':focus-visible')){
+      angle+=(-.07+velocity)*dt;velocity*=Math.exp(-2*dt);render();
     }
-    raf = requestAnimationFrame(tick);
+    raf=requestAnimationFrame(tick);
   }
-  raf = requestAnimationFrame(tick);
-  window.addEventListener("pagehide", () => cancelAnimationFrame(raf));
-  window.addEventListener("pageshow", (event) => {
-    if (event.persisted) {
-      last = 0;
-      raf = requestAnimationFrame(tick);
-    }
-  });
+  render();raf=requestAnimationFrame(tick);
+  window.addEventListener('pagehide',()=>cancelAnimationFrame(raf));
+  window.addEventListener('pageshow',event=>{if(event.persisted){last=0;raf=requestAnimationFrame(tick);}});
 })();
