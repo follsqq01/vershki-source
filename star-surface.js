@@ -59,14 +59,14 @@ async function createStarSurface(host, axis) {
     }
   `));
   gl.attachShader(program,shader(gl.FRAGMENT_SHADER,`
-    precision mediump float; varying vec3 N; varying vec3 P; varying vec2 uv;
+    precision highp float; varying vec3 N; varying vec3 P; varying vec2 uv;
     uniform sampler2D artwork; uniform float angle; uniform vec3 axis;
     void main() {
       vec3 n=normalize(N), l=normalize(vec3(-.6,.85,1.5));
       vec4 original=texture2D(artwork,uv);
       vec3 edge=vec3(.86,.93,.36);
       float facing=abs(cos(angle)+axis.z*axis.z*(1.-cos(angle)));
-      vec3 pigment=mix(edge,original.rgb,smoothstep(.15,.8,facing));
+      vec3 pigment=mix(edge,original.rgb,smoothstep(.15,.8,facing)*smoothstep(.1,.75,original.a));
       float shade=.88+.12*max(dot(n,l),0.);
       vec3 color=pigment*mix(shade,1.,facing*.85);
       float alpha=mix(1.,original.a,smoothstep(.3,.8,facing));

@@ -56,7 +56,7 @@
     starImage.remove();
     starState.renderer = renderer;
     starState.lastRendered = null;
-  }).catch(() => {});
+  }).catch(error => console.warn("Star renderer:", error.message));
   let visible = true,
     last = 0,
     raf = 0;
