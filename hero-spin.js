@@ -5,21 +5,6 @@
   const starImage = hero.querySelector(".hero-star");
   const star = document.createElement("div");
   star.className = "hero-star";
-  const volume = document.createElement("div");
-  volume.className = "star-volume";
-  for (let z = -10; z <= 10; z += 2) {
-    const face = starImage.cloneNode();
-    face.removeAttribute("class");
-    face.alt = "";
-    face.draggable = false;
-    face.style.transform = `translateZ(${z}px)`;
-    if (Math.abs(z) < 10) {
-      face.style.filter = "brightness(.86)";
-      face.style.opacity = ".55";
-    }
-    volume.append(face);
-  }
-  star.append(volume);
   starImage.replaceWith(star);
   const normalize = (a) => {
     const n = Math.hypot(...a);
@@ -63,6 +48,14 @@
     renderer: null,
     lastRendered: null,
   }));
+  const starState = states.find(state => state.el === star);
+  try {
+    starState.renderer = createStarSurface(star, starState.axis);
+  } catch {
+    star.append(starImage);
+    starImage.removeAttribute("class");
+    starImage.style.cssText = "width:100%;height:100%;object-fit:contain";
+  }
   let visible = true,
     last = 0,
     raf = 0;
@@ -179,8 +172,7 @@
         }
         if (state.lastRendered !== state.angle) {
           if (state.renderer) state.renderer(state.angle);
-          else if (state.el === star)
-            volume.style.transform = `rotate3d(${state.axis.join(",")},${state.angle}rad)`;
+
           state.el.dataset.rotation = state.angle.toFixed(4);
           state.el.setAttribute(
             "aria-valuenow",

@@ -807,19 +807,12 @@ main,
   z-index: 2;
   pointer-events: none;
 }
-.star-volume {
-  position: absolute;
-  inset: 0;
-  transform-style: preserve-3d;
-  pointer-events: none;
-}
-.star-volume img {
-  position: absolute;
-  inset: 0;
+.star-surface {
+  display: block;
   width: 100%;
   height: 100%;
   pointer-events: none;
-  backface-visibility: visible;
+  filter: drop-shadow(0 12px 16px #8a92152b);
 }
 .hero-star.spin-control {
   perspective: 1200px;
