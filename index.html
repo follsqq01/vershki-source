@@ -10,6 +10,7 @@
     <meta name="theme-color" content="#e4f371" />
     <title>Вершки — творчество вместе</title>
     <link rel="stylesheet" href="style.css" />
+    <link rel="stylesheet" href="motion.css" />
   </head>
   <body>
     <main>
@@ -23,7 +24,7 @@
           <span>в</span><span>е</span><span>р</span><span>ш</span><span>к</span
           ><span>и</span>
         </h1>
-        <div class="hero-art" aria-hidden="true">
+        <div class="hero-art">
           <div class="thread thread-back">
             <img src="assets/figma/a1a5b.svg" alt="" />
           </div>
@@ -55,21 +56,69 @@
           </div>
           <p class="profile-name">Бабуля!</p>
           <p class="profile-handle">@lydya_rez1967</p>
-          <div
-            class="profile-gallery"
-            aria-label="Медиатека — пример из макета"
-          >
-            <span class="selected">фото</span><span>аудио</span
-            ><span>голосовые</span>
-            <div></div>
-            <div></div>
-            <div></div>
-            <div></div>
-            <div></div>
-            <div></div>
+          <div class="profile-library">
+            <div
+              class="media-tabs"
+              role="tablist"
+              aria-label="Медиатека бабушки"
+            >
+              <button
+                type="button"
+                role="tab"
+                id="tab-photos"
+                aria-controls="media-panel"
+                aria-selected="true"
+                data-tab="photos"
+              >
+                фото
+              </button>
+              <button
+                type="button"
+                role="tab"
+                id="tab-audio"
+                aria-controls="media-panel"
+                aria-selected="false"
+                tabindex="-1"
+                data-tab="audio"
+              >
+                аудио
+              </button>
+              <button
+                type="button"
+                role="tab"
+                id="tab-voice"
+                aria-controls="media-panel"
+                aria-selected="false"
+                tabindex="-1"
+                data-tab="voice"
+              >
+                голосовые
+              </button>
+              <button
+                type="button"
+                role="tab"
+                id="tab-circles"
+                aria-controls="media-panel"
+                aria-selected="false"
+                tabindex="-1"
+                data-tab="circles"
+              >
+                кружочки
+              </button>
+            </div>
+            <div
+              id="media-panel"
+              class="media-panel"
+              role="tabpanel"
+              aria-labelledby="tab-photos"
+              tabindex="0"
+            ></div>
           </div>
         </div>
-        <div class="messages">
+        <div class="messages" aria-label="История переписки">
+          <div class="typing" aria-hidden="true">
+            <span></span><span></span><span></span>
+          </div>
           <div class="message incoming">
             <p class="sender">Бабуля!</p>
             <p class="bubble">
@@ -88,16 +137,29 @@
           <div class="message voice">
             <div
               class="voice-bubble"
-              aria-label="Голосовое сообщение, 5 секунд — иллюстрация"
+              aria-label="Голосовое сообщение — демонстрационная озвучка"
             >
-              <span class="play" aria-hidden="true">▶</span
+              <button
+                type="button"
+                class="play"
+                aria-label="Послушать голосовое сообщение"
+                aria-pressed="false"
+              >
+                ▶</button
               ><span class="wave" aria-hidden="true"
                 ><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i
                 ><i></i><i></i><i></i><i></i><i></i><i></i></span
-              ><span class="duration">0:05</span
+              ><span class="duration">0:07</span
               ><span class="reaction" aria-hidden="true">😭</span>
             </div>
             <p class="receipt">Read 9:39</p>
+          </div>
+          <div class="scene-controls">
+            <span class="scene-status sr-only" role="status"></span
+            ><button type="button" class="scene-skip" hidden>Пропустить</button
+            ><button type="button" class="scene-replay" hidden>
+              Повторить ↻
+            </button>
           </div>
         </div>
       </section>
@@ -134,7 +196,11 @@
         </div>
       </section>
 
-      <section class="together panel" aria-labelledby="together-heading">
+      <section
+        class="together panel"
+        id="together"
+        aria-labelledby="together-heading"
+      >
         <div class="together-stars" aria-hidden="true">
           <div><img src="assets/figma/6ae23.svg" alt="" /></div>
           <div><img src="assets/figma/2c429.svg" alt="" /></div>
@@ -150,11 +216,63 @@
           Творчество может стать способом побыть вместе. Создавая что-то, мы
           узнаём друг друга по-новому.
         </p>
-        <div class="polaroids" aria-label="Места для фотографий из макета">
-          <div class="polaroid"><div></div></div>
-          <div class="polaroid"><div></div></div>
-          <div class="polaroid"><div></div></div>
+        <div class="particles" aria-hidden="true"></div>
+        <div class="orbit-path" aria-hidden="true"></div>
+        <div class="polaroids" aria-label="Моменты совместного творчества">
+          <div class="orbit-card" data-phase="-2.22">
+            <button
+              class="polaroid"
+              type="button"
+              data-photo="pottery"
+              aria-label="Открыть фото: за гончарным кругом"
+            >
+              <img
+                src="assets/media/pottery.jpg"
+                alt="Руки за гончарным кругом"
+                loading="lazy"
+              /><span class="photo-caption">время пробовать</span
+              ><span class="photo-shine" aria-hidden="true"></span>
+            </button>
+          </div>
+          <div class="orbit-card" data-phase="-0.12">
+            <button
+              class="polaroid"
+              type="button"
+              data-photo="painting"
+              aria-label="Открыть фото: расписываем керамику"
+            >
+              <img
+                src="assets/media/painting.jpg"
+                alt="Роспись керамики кисточкой"
+                loading="lazy"
+              /><span class="photo-caption">время творить</span
+              ><span class="photo-shine" aria-hidden="true"></span>
+            </button>
+          </div>
+          <div class="orbit-card" data-phase="1.98">
+            <button
+              class="polaroid"
+              type="button"
+              data-photo="colors"
+              aria-label="Открыть фото: выбираем цвета"
+            >
+              <img
+                src="assets/media/colors.jpg"
+                alt="Раскрашивание керамики пастельными цветами"
+                loading="lazy"
+              /><span class="photo-caption">время быть вместе</span
+              ><span class="photo-shine" aria-hidden="true"></span>
+            </button>
+          </div>
         </div>
+        <button
+          class="motion-toggle"
+          type="button"
+          aria-pressed="false"
+          aria-label="Приостановить движение"
+        >
+          Ⅱ
+        </button>
       </section>
 
       <section class="story" aria-label="Новый повод побыть вместе">
@@ -278,6 +396,18 @@
     </main>
     <footer aria-hidden="true"></footer>
     <div class="notice" role="status" hidden>Тест скоро появится</div>
+    <dialog class="media-dialog" aria-labelledby="media-title">
+      <button type="button" class="dialog-close" aria-label="Закрыть просмотр">
+        ×
+      </button>
+      <h2 id="media-title"></h2>
+      <div class="dialog-content"></div>
+      <p class="dialog-caption"></p>
+    </dialog>
     <script src="landing.js"></script>
+    <script src="motion.js"></script>
+    <script src="bead-surface.js"></script>
+    <script src="hero-spin.js"></script>
+    <script src="media.js"></script>
   </body>
 </html>

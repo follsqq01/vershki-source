@@ -1,0 +1,827 @@
+/* Animation layers are separate from the static Figma layout. */
+html {
+  scrollbar-gutter: stable;
+}
+body.scene-locked {
+  overscroll-behavior: none;
+}
+.hero-art,
+.story-art {
+  perspective: 1200px;
+}
+.bead {
+  box-shadow:
+    inset -15rem -20rem 38rem #74689412,
+    inset 9rem 12rem 22rem #ffffff29;
+  will-change: translate, rotate;
+}
+.bead::before {
+  content: "";
+  position: absolute;
+  inset: 5%;
+  z-index: 3;
+  border-radius: 50%;
+  background: radial-gradient(ellipse at 27% 19%, #ffffff55, transparent 48%);
+  pointer-events: none;
+}
+.float-motion {
+  animation: bob 7s ease-in-out infinite alternate;
+  animation-delay: var(--float-delay, 0s);
+}
+@keyframes bob {
+  from {
+    translate: 0 -7rem;
+    rotate: -1.3deg;
+  }
+  to {
+    translate: 0 9rem;
+    rotate: 1.3deg;
+  }
+}
+.reveal {
+  opacity: 0;
+  translate: 0 28px;
+  transition:
+    opacity 0.85s ease,
+    translate 0.85s cubic-bezier(0.2, 0.7, 0.2, 1);
+}
+.reveal.is-visible {
+  opacity: 1;
+  translate: 0 0;
+}
+.bead-title.is-visible span {
+  animation: letter-pop 0.7s cubic-bezier(0.2, 0.8, 0.2, 1.3) both;
+  animation-delay: calc(var(--letter-index, 0) * 45ms);
+}
+@keyframes letter-pop {
+  from {
+    opacity: 0;
+    transform: translateY(15px) rotate(-12deg);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+.together {
+  isolation: isolate;
+  perspective: 1400px;
+  min-height: 788rem;
+}
+.together-copy,
+.together > .bead-title {
+  pointer-events: none;
+  z-index: 8;
+}
+.polaroids {
+  position: absolute;
+  inset: 0;
+  perspective: 1300px;
+  transform-style: preserve-3d;
+  z-index: 4;
+  pointer-events: none;
+}
+.orbit-card {
+  position: absolute;
+  left: 50%;
+  top: 69%;
+  width: 335rem;
+  height: 380rem;
+  transform-style: preserve-3d;
+  will-change: transform;
+  pointer-events: auto;
+}
+.together .orbit-card .polaroid {
+  position: relative;
+  inset: auto;
+  width: 100%;
+  height: 100%;
+  padding: 12rem 12rem 42rem;
+  display: block;
+  background: #fff;
+  border: 0;
+  transform: rotateX(var(--tilt-x, 0deg)) rotateY(var(--tilt-y, 0deg))
+    translateZ(var(--lift, 0px));
+  transform-style: preserve-3d;
+  box-shadow:
+    0 3px 0 #e6e4dc,
+    0 7px 0 -3px #d4d4b9,
+    0 30rem 50rem -20rem #4c582c55;
+  transition: box-shadow 0.35s ease;
+  cursor: zoom-in;
+  will-change: transform;
+  isolation: isolate;
+}
+.polaroid img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  pointer-events: none;
+  filter: saturate(0.8) contrast(0.96);
+  transform: translateZ(1px);
+}
+.photo-caption {
+  position: absolute;
+  bottom: 11rem;
+  left: 0;
+  width: 100%;
+  text-align: center;
+  font:
+    20rem/1 FreeSans,
+    Arial;
+  letter-spacing: -0.5rem;
+  color: #7c7b6d;
+  transform: translateZ(4px);
+}
+.photo-shine {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 3;
+  transform: translateZ(6px);
+  background: radial-gradient(
+    ellipse at var(--light-x, 35%) var(--light-y, 20%),
+    #fff9 0%,
+    #fff3 22%,
+    transparent 62%
+  );
+  mix-blend-mode: soft-light;
+  opacity: var(--shine, 0.32);
+  transition: opacity 0.35s;
+}
+.polaroid:focus-visible {
+  outline: 3px solid #505050;
+  outline-offset: 8px;
+}
+.orbit-path {
+  position: absolute;
+  left: -9%;
+  top: 49%;
+  width: 118%;
+  height: 43%;
+  border: 1px solid #ffffff80;
+  border-radius: 50%;
+  transform: rotate(-8deg);
+  pointer-events: none;
+  z-index: 1;
+  box-shadow: 0 0 20px #fff3;
+}
+.particles {
+  position: absolute;
+  inset: 0;
+  z-index: 3;
+  pointer-events: none;
+  overflow: hidden;
+}
+.particle {
+  position: absolute;
+  width: var(--size);
+  height: var(--size);
+  border-radius: 50%;
+  background: #fff8;
+  box-shadow: 0 0 8px #fff5;
+  animation: particle-drift var(--duration) ease-in-out infinite alternate;
+  animation-delay: var(--delay);
+}
+@keyframes particle-drift {
+  from {
+    transform: translate3d(0, 24px, 0);
+    opacity: 0.15;
+  }
+  to {
+    transform: translate3d(18px, -35px, 60px);
+    opacity: 0.75;
+  }
+}
+.motion-toggle {
+  position: absolute;
+  bottom: 22px;
+  right: 22px;
+  z-index: 10;
+  width: 34px;
+  height: 34px;
+  border: 1px solid #50505055;
+  border-radius: 50%;
+  background: #ffffffe0;
+  font: 16px Arial;
+  color: #505050;
+  backdrop-filter: blur(8px);
+}
+.motion-paused .float-motion,
+.motion-paused .particle {
+  animation-play-state: paused;
+}
+/* A deterministic, one-shot chat scene. Hidden messages still reserve layout. */
+.chat-ready .message {
+  opacity: 0;
+  visibility: hidden;
+  transform: translateY(18px) scale(0.94);
+  transform-origin: bottom left;
+  transition:
+    opacity 0.4s ease,
+    transform 0.6s cubic-bezier(0.16, 1, 0.3, 1),
+    visibility 0.4s;
+}
+.chat-ready .message.outgoing {
+  transform-origin: bottom right;
+}
+.chat-ready .message.is-sent {
+  opacity: 1;
+  visibility: visible;
+  transform: none;
+}
+.chat-ready .reaction {
+  opacity: 0;
+  transform: translate(24px, 38px) scale(0.1) rotate(-30deg);
+  transform-origin: bottom left;
+}
+.chat-ready .reaction.is-reacted {
+  animation: reaction-land 0.85s cubic-bezier(0.2, 0.8, 0.25, 1.3) both;
+}
+@keyframes reaction-land {
+  0% {
+    opacity: 0;
+    transform: translate(24px, 38px) scale(0.1) rotate(-30deg);
+  }
+  60% {
+    opacity: 1;
+    transform: translate(-3px, -6px) scale(1.2) rotate(12deg);
+  }
+  100% {
+    opacity: 1;
+    transform: none;
+  }
+}
+.typing {
+  position: absolute;
+  left: 0;
+  top: 85rem;
+  display: none;
+  gap: 7px;
+  background: #ffcfff;
+  padding: 18px 24px;
+  border-radius: 16px;
+}
+.typing.is-typing {
+  display: flex;
+}
+.typing span {
+  width: 7px;
+  height: 7px;
+  background: #846588;
+  border-radius: 50%;
+  animation: typing-dot 0.8s infinite alternate;
+}
+.typing span:nth-child(2) {
+  animation-delay: 0.15s;
+}
+.typing span:nth-child(3) {
+  animation-delay: 0.3s;
+}
+@keyframes typing-dot {
+  to {
+    opacity: 0.35;
+    transform: translateY(-5px);
+  }
+}
+.scene-controls {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 8rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  font-size: 16rem;
+  color: #586c81;
+  line-height: 1.2;
+  letter-spacing: -0.3rem;
+}
+.scene-controls button {
+  border: 1px solid #586c8155;
+  border-radius: 20px;
+  background: #ffffff50;
+  padding: 7px 12px;
+  font: inherit;
+  white-space: nowrap;
+}
+.scene-progress {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: -9rem;
+  height: 2px;
+  background: #ffffff40;
+  overflow: hidden;
+  border-radius: 2px;
+}
+.scene-progress i {
+  display: block;
+  width: 100%;
+  height: 100%;
+  background: #fff;
+  transform: scaleX(var(--scene-progress, 0));
+  transform-origin: left;
+  transition: transform 0.3s linear;
+}
+.play {
+  border: 0;
+  flex: none;
+  cursor: pointer;
+}
+.voice-bubble.is-playing .wave i {
+  animation: wave-play 0.55s ease-in-out infinite alternate;
+  animation-delay: calc(var(--bar, 0) * 35ms);
+}
+@keyframes wave-play {
+  to {
+    transform: scaleY(0.3);
+    opacity: 0.3;
+  }
+}
+/* Profile tabs, local playable media and accessible lightbox. */
+.profile-library {
+  width: 100%;
+  margin-top: auto;
+  min-height: 369rem;
+}
+.media-tabs {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 7rem;
+  margin-bottom: 10rem;
+}
+.media-tabs button {
+  border: 0;
+  background: none;
+  padding: 8rem 0;
+  font-size: 19rem;
+  line-height: 1.2;
+  letter-spacing: -0.9rem;
+  color: #666;
+  position: relative;
+}
+.media-tabs button[aria-selected="true"] {
+  color: #505050;
+}
+.media-tabs button[aria-selected="true"]::after {
+  content: "";
+  position: absolute;
+  bottom: 0;
+  left: 10%;
+  right: 10%;
+  height: 1px;
+  background: currentColor;
+}
+.media-panel {
+  height: 310rem;
+  overflow: auto;
+  overscroll-behavior: contain;
+  scrollbar-width: thin;
+  outline-offset: 3px;
+}
+.media-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 7rem;
+}
+.photo-thumb {
+  border: 0;
+  padding: 0;
+  border-radius: 6rem;
+  overflow: hidden;
+  aspect-ratio: 0.94;
+  background: #ddd;
+  cursor: zoom-in;
+}
+.photo-thumb img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.45s;
+}
+.photo-thumb:hover img {
+  transform: scale(1.06);
+}
+.demo-label {
+  font:
+    12rem/1.2 FreeSans,
+    Arial;
+  color: #92928b;
+  margin-top: 9rem;
+  text-align: center;
+}
+.track-list {
+  display: flex;
+  flex-direction: column;
+  gap: 10rem;
+}
+.track {
+  padding: 14rem;
+  border-radius: 12rem;
+  background: #e8edf0;
+  display: grid;
+  grid-template-columns: 42rem 1fr;
+  gap: 10rem;
+  align-items: center;
+}
+.track-button {
+  width: 42rem;
+  height: 42rem;
+  border: 0;
+  border-radius: 50%;
+  background: #c9ddef;
+  font: 17rem Arial;
+  display: grid;
+  place-items: center;
+}
+.track-title {
+  font-size: 19rem;
+  letter-spacing: -0.7rem;
+  line-height: 1.2;
+}
+.track-caption {
+  font-size: 13rem;
+  color: #85878a;
+  margin-top: 4rem;
+}
+.track-progress {
+  grid-column: 2;
+  width: 100%;
+  height: 3px;
+  border: 0;
+  accent-color: #82748a;
+  cursor: pointer;
+}
+.voice-track {
+  background: #eee2ef;
+}
+.voice-track .track-button {
+  background: #dbc7e0;
+}
+.circle-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20rem;
+  padding: 12rem;
+}
+.circle-thumb {
+  border: 0;
+  background: none;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10rem;
+  font-size: 17rem;
+  letter-spacing: -0.5rem;
+  padding: 0;
+}
+.circle-thumb > span:first-child {
+  position: relative;
+  width: 170rem;
+  aspect-ratio: 1;
+  border-radius: 50%;
+  overflow: hidden;
+  border: 3rem solid #a2bed8;
+  padding: 5rem;
+  background: #fff;
+}
+.circle-thumb img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 50%;
+}
+.circle-thumb b {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  color: #fff;
+  font: 32rem Arial;
+  text-shadow: 0 2px 10px #0007;
+}
+.media-dialog {
+  padding: 28px;
+  border: 0;
+  border-radius: 24px;
+  background: #fbfaf5;
+  color: #505050;
+  max-width: min(760px, calc(100vw - 32px));
+  max-height: calc(100dvh - 40px);
+  overflow: auto;
+  font-size: 16px;
+  box-shadow: 0 30px 100px #0003;
+}
+.media-dialog::backdrop {
+  background: #3030388c;
+  backdrop-filter: blur(12px);
+}
+.dialog-close {
+  position: absolute;
+  top: 10px;
+  right: 14px;
+  width: 36px;
+  height: 36px;
+  border: 0;
+  border-radius: 50%;
+  background: #fff9;
+  font: 30px/1 Arial;
+  z-index: 2;
+}
+.media-dialog h2 {
+  font:
+    28px/1.1 Oranienbaum,
+    serif;
+  margin: 0 35px 18px 0;
+}
+.dialog-content img {
+  max-width: 100%;
+  max-height: 65dvh;
+  object-fit: contain;
+  border-radius: 6px;
+  margin: auto;
+}
+.dialog-content video {
+  display: block;
+  width: min(440px, 70vw);
+  aspect-ratio: 1;
+  border-radius: 50%;
+  object-fit: cover;
+  margin: auto;
+  background: #222;
+}
+.dialog-caption {
+  font:
+    13px/1.4 FreeSans,
+    Arial;
+  color: #777;
+  margin: 16px 0 0;
+}
+.dialog-content audio {
+  width: 100%;
+  margin-top: 16px;
+}
+@media (max-width: 700px) {
+  .conversation {
+    padding: 20px;
+  }
+  .profile-library {
+    margin-top: 20px;
+    min-height: 0;
+  }
+  .media-tabs {
+    gap: 7px;
+    margin-bottom: 10px;
+  }
+  .media-tabs button {
+    font-size: 13px;
+    letter-spacing: -0.6px;
+    padding: 8px 0;
+    min-height: 36px;
+  }
+  .media-panel {
+    height: 166px;
+  }
+  .media-grid {
+    gap: 5px;
+  }
+  .photo-thumb {
+    border-radius: 5px;
+    aspect-ratio: 1.1;
+  }
+  .demo-label {
+    font-size: 10px;
+    margin-top: 8px;
+  }
+  .track-list {
+    gap: 7px;
+  }
+  .track {
+    padding: 10px;
+    border-radius: 10px;
+    grid-template-columns: 34px 1fr;
+    gap: 8px;
+  }
+  .track-button {
+    width: 34px;
+    height: 34px;
+    font-size: 14px;
+  }
+  .track-title {
+    font-size: 15px;
+    letter-spacing: -0.4px;
+  }
+  .track-caption {
+    font-size: 11px;
+    margin-top: 3px;
+  }
+  .circle-grid {
+    gap: 12px;
+    padding: 6px;
+  }
+  .circle-thumb {
+    font-size: 13px;
+    gap: 7px;
+    letter-spacing: -0.4px;
+  }
+  .circle-thumb > span:first-child {
+    width: 100px;
+    border-width: 2px;
+    padding: 3px;
+  }
+  .circle-thumb b {
+    font-size: 22px;
+  }
+  .messages {
+    padding-bottom: 45px;
+    min-height: 400px;
+  }
+  .typing {
+    top: 20px;
+    padding: 14px 20px;
+  }
+  .scene-controls {
+    bottom: 4px;
+    font-size: 12px;
+    letter-spacing: -0.2px;
+  }
+  .scene-status {
+    max-width: 190px;
+  }
+  .scene-progress {
+    bottom: -4px;
+  }
+  .scene-controls button {
+    padding: 7px 10px;
+  }
+  .together {
+    height: 560px;
+    min-height: 0;
+  }
+  .orbit-card {
+    width: 180px;
+    height: 211px;
+    top: 72%;
+  }
+  .together .orbit-card .polaroid {
+    width: 100%;
+    height: 100%;
+    padding: 7px 7px 29px;
+    box-shadow:
+      0 2px 0 #e5e4d9,
+      0 16px 25px -10px #46502655;
+  }
+  .photo-caption {
+    font-size: 12px;
+    bottom: 9px;
+    letter-spacing: -0.3px;
+  }
+  .orbit-path {
+    top: 55%;
+    height: 30%;
+  }
+  .motion-toggle {
+    width: 32px;
+    height: 32px;
+    bottom: 14px;
+    right: 14px;
+  }
+  .media-dialog {
+    padding: 22px 16px;
+  }
+  .media-dialog h2 {
+    font-size: 25px;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .float-motion,
+  .particle,
+  .typing span,
+  .voice-bubble.is-playing .wave i {
+    animation: none !important;
+  }
+  .reveal {
+    opacity: 1;
+    translate: none;
+    transition: none;
+  }
+  .bead-title.is-visible span {
+    animation: none;
+  }
+  .chat-ready .message {
+    transition: none;
+  }
+  .chat-ready .reaction.is-reacted {
+    animation: none;
+    opacity: 1;
+    transform: none;
+  }
+}
+.is-offscreen .particle {
+  animation-play-state: paused;
+}
+.reveal:focus-within {
+  opacity: 1;
+  translate: none;
+}
+/* Clipping must not create hidden scroll containers: focusing an orbiting card
+   or a deep link should move the page, never the artwork inside its section. */
+main,
+.panel,
+.hero {
+  overflow: clip;
+}
+.orbit-card {
+  top: 74%;
+  width: 310rem;
+  height: 355rem;
+}
+@media (max-width: 700px) {
+  .orbit-card {
+    top: 80%;
+    width: 180px;
+    height: 211px;
+  }
+}
+/* The lower part of the wheel lives outside the panel, like a ferris wheel.
+   The frame clips it; cards emerge on one side and descend on the other. */
+.orbit-card {
+  left: 50%;
+  top: 0;
+  width: 355rem;
+  height: 400rem;
+}
+.orbit-path {
+  display: none;
+}
+.polaroid {
+  touch-action: pan-y;
+  user-select: none;
+  -webkit-user-select: none;
+}
+.together .orbit-card .polaroid {
+  cursor: grab;
+}
+.polaroids.is-dragging .polaroid {
+  cursor: grabbing;
+}
+@media (max-width: 700px) {
+  .orbit-card {
+    top: 0;
+    width: 180px;
+    height: 211px;
+  }
+}
+.scene-controls {
+  justify-content: flex-end;
+}
+.hero-art {
+  pointer-events: none;
+  perspective: 1500px;
+}
+.hero-art .spin-control {
+  pointer-events: auto;
+  cursor: grab;
+  touch-action: none;
+  user-select: none;
+  -webkit-user-select: none;
+  outline-offset: 8px;
+}
+.hero-art .spin-control:focus-visible {
+  outline: 2px dashed #777;
+}
+.hero-art .is-spinning {
+  cursor: grabbing;
+}
+.hero-art .bead {
+  overflow: hidden;
+}
+.sphere-surface {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 2;
+  pointer-events: none;
+}
+.star-volume {
+  position: absolute;
+  inset: 0;
+  transform-style: preserve-3d;
+  pointer-events: none;
+}
+.star-volume img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  backface-visibility: visible;
+}
+.hero-star.spin-control {
+  perspective: 1200px;
+  transform-style: preserve-3d;
+}

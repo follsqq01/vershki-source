@@ -1343,3 +1343,31 @@ img[src$=".svg"] {
     outline-offset: 3px;
   }
 }
+@media (max-width: 700px) {
+  .messages {
+    height: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+  }
+  .message {
+    position: relative;
+    top: auto;
+    left: auto;
+    right: auto;
+  }
+  .outgoing {
+    align-self: flex-end;
+  }
+  .voice {
+    margin-top: 10px;
+    align-self: flex-start;
+  }
+  .test .bead-title {
+    font-size: clamp(24px, 7vw, 29px);
+  }
+  .test .bead-title span {
+    width: clamp(25px, 7.3vw, 30px);
+    height: clamp(25px, 7.3vw, 30px);
+  }
+}
