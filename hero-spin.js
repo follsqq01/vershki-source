@@ -17,20 +17,35 @@
   const pink = art.querySelector('.hero-pink');
   const star = art.querySelector('.hero-star');
   star.draggable = false;
-  const items = [{el:blue,phase:-.7},{el:star,phase:0},{el:pink,phase:.7}];
-  ['р','ш','к','и'].forEach((letter,i)=>{
-    const el=(i%2 ? pink : blue).cloneNode(true);
-    el.classList.remove('hero-blue','hero-pink');
-    el.querySelector('span').textContent=letter;
-    art.append(el);
-    items.push({el,phase:1.68+i*.98});
+  const letterData = [
+    ['в','blue'],['е','coral'],['р','pink'],
+    ['ш','mint'],['к','gold'],['и','lavender'],
+  ];
+  const shapeData = ['star','sun','capsule','diamond','flower','drop'];
+  const items = [];
+  letterData.forEach(([letter,color],i)=>{
+    const bead = i===0 ? blue : i===1 ? pink : blue.cloneNode(true);
+    bead.classList.add(`bead-${color}`);
+    bead.querySelector('span').textContent=letter;
+    if(i>1) art.append(bead);
+    items.push({el:bead,phase:(i*2-1)*Math.PI/6});
+    const shape=i===0 ? star : document.createElement('div');
+    if(i>0){shape.className=`hero-shape shape-${shapeData[i]}`;art.append(shape);}
+    items.push({el:shape,phase:i*2*Math.PI/6});
   });
   items.forEach(({el})=>{el.classList.add('hero-orbit-item');el.setAttribute('aria-hidden','true');});
   let angle=0,velocity=0,drag=null,visible=true,last=0,raf=0;
   const render=()=>{
-    items.forEach(({el,phase})=>{
+    const ranked=items.map((item,index)=>({
+      index,
+      distance:Math.abs(Math.atan2(Math.sin(item.phase+angle),Math.cos(item.phase+angle))),
+    })).sort((a,b)=>a.distance-b.distance);
+    const visibleSet=new Set(ranked.slice(0,3).map(item=>item.index));
+    items.forEach(({el,phase},index)=>{
       const a=phase+angle;
-      el.style.transform=`translate(-50%, -50%) translate(${756+650*Math.sin(a)}rem, ${1000-650*Math.cos(a)}rem) rotate(${a*.24}rad)`;
+      el.style.transform=`translate(-50%, -50%) translate(${756+750*Math.sin(a)}rem, ${1100-750*Math.cos(a)}rem)`;
+      el.style.visibility=visibleSet.has(index)?'visible':'hidden';
+      el.style.opacity=visibleSet.has(index)?'1':'0';
     });
     art.dataset.rotation=angle.toFixed(4);
     art.setAttribute('aria-valuenow',String(Math.floor(((angle*180/Math.PI)%360+360)%360)));
@@ -44,7 +59,7 @@
   art.addEventListener('pointermove',event=>{
     if(!drag)return;
     const scale=art.getBoundingClientRect().width/1512;
-    const delta=(event.clientX-drag.x)/(650*scale);
+    const delta=(event.clientX-drag.x)/(750*scale);
     angle+=delta;
     velocity=Math.max(-1.5,Math.min(1.5,delta/Math.max(.016,(event.timeStamp-drag.time)/1000)));
     drag={x:event.clientX,time:event.timeStamp};render();

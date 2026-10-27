@@ -824,8 +824,8 @@ main,
 .hero-orbit { perspective: none; }
 .hero-orbit:focus-visible { outline: 2px dashed #999; outline-offset: -8px; }
 .hero-orbit-thread {
-  position: absolute; left: 106rem; top: 350rem;
-  width: 1300rem; height: 1300rem;
+  position: absolute; left: 6rem; top: 350rem;
+  width: 1500rem; height: 1500rem;
   border: 2rem solid #696969; border-radius: 50%;
 }
 .hero-orbit .hero-orbit-item {
@@ -846,3 +846,43 @@ main,
   background: #80b1df44;
 }
 .hero-orbit .pink .hole { background: #bf8dc844; }
+
+.hero-orbit .bead-pink { background: linear-gradient(140deg,#e3d0e9,#f2bfe9); }
+.hero-orbit .bead-pink span { color:#c58cce; }
+.hero-orbit .bead-coral { background: linear-gradient(145deg,#ff795d,#ffb193); }
+.hero-orbit .bead-mint { background: linear-gradient(145deg,#d7ed55,#f4fca7); }
+.hero-orbit .bead-gold { background: linear-gradient(145deg,#ffc93e,#ffe579); }
+.hero-orbit .bead-lavender { background: linear-gradient(145deg,#e3cee9,#f3c8eb); }
+.hero-orbit .bead-coral span { color:#d96659; }
+.hero-orbit .bead-mint span { color:#a4bf40; }
+.hero-orbit .bead-gold span { color:#d99f30; }
+.hero-orbit .bead-lavender span { color:#bf89cb; }
+.hero-orbit .hero-shape {
+  position:absolute; width:365rem; height:365rem;
+  filter:blur(2rem);
+}
+.hero-orbit .shape-sun {
+  border-radius:50%;
+  background:radial-gradient(circle at 38% 34%,#fff4b0 0,#ffdd69 48%,#ffb94c 100%);
+  box-shadow:0 0 35rem #ffcf6b9e, inset -15rem -18rem 22rem #eaa45255;
+}
+.hero-orbit .shape-capsule {
+  width:420rem; height:245rem; border-radius:140rem;
+  background:linear-gradient(140deg,#ff745e,#ffb098);
+  transform-origin:center;
+  box-shadow:inset -22rem -25rem 28rem #da664755;
+}
+.hero-orbit .shape-diamond {
+  width:295rem; height:295rem; border-radius:28%; rotate:45deg;
+  background:linear-gradient(145deg,#e9fa72,#bdda55);
+  box-shadow:inset -20rem -15rem 28rem #9db44855;
+}
+.hero-orbit .shape-flower {
+  border-radius:42% 58% 43% 57% / 59% 38% 62% 41%;
+  background:radial-gradient(circle at 35% 29%,#fce4f3,#e5b9e9 68%,#caa0d4);
+}
+.hero-orbit .shape-drop {
+  border-radius:64% 42% 55% 37% / 38% 66% 38% 65%;
+  background:linear-gradient(145deg,#a9d1fb,#70acef);
+  box-shadow:inset -20rem -18rem 28rem #5d9ee05c;
+}
