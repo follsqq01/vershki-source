@@ -819,7 +819,7 @@ main,
   transform-style: preserve-3d;
 }
 
-/* A continuous upper arc with no more than three visible ornaments. */
+/* Opaque ornaments travel out through the clipped hero boundary. */
 .hero-orbit { perspective:none; }
 .hero-orbit:focus-visible { outline:2px dashed #aaa; outline-offset:-8px; }
 .hero-orbit-thread {
@@ -830,7 +830,7 @@ main,
 .hero-orbit .hero-orbit-item {
   position:absolute;left:0;top:0;pointer-events:auto;cursor:grab;
   touch-action:pan-y;user-select:none;-webkit-user-select:none;
-  will-change:transform,opacity;
+  will-change:transform;
 }
 .hero-orbit.is-dragging .hero-orbit-item { cursor:grabbing; }
 .hero-orbit .orbit-bead {

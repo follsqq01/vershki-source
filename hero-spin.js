@@ -67,17 +67,20 @@
   art.setAttribute('aria-valuemin','0');art.setAttribute('aria-valuemax','359');
   const period=sequence.length*step;
   let angle=0,velocity=0,drag=null,visible=true,last=0,raf=0,hovered=false;
-  const smooth=t=>t*t*(3-2*t);
   function render(){
     for(const {el,hole,frontThread,phase} of items){
       // Recycle on the hidden part of the necklace, never on its visible arc.
-      const a=((phase+angle+period/2)%period+period)%period-period/2;
-      const distance=Math.abs(a);
-      const opacity=1-smooth(Math.min(1,Math.max(0,(distance-.86)/.19)));
-      el.style.visibility=opacity>0?'visible':'hidden';
-      el.style.opacity=opacity.toFixed(4);
+      const phaseAngle=((phase+angle+period/2)%period+period)%period-period/2;
+      const distance=Math.abs(phaseAngle);
+      // Keep the top composition close; turn down the side of the circle
+      // before the next ornament enters. No opacity or on-screen recycling.
+      const side=Math.max(0,distance-step);
+      const a=Math.sign(phaseAngle)*(distance+10*side*side);
+      // Only recycle below the viewport, on the hidden bottom half of the circle.
+      // Every ornament remains opaque until the hero clips it at its boundary.
+      el.style.visibility=Math.abs(a)<=Math.PI?'visible':'hidden';
       el.style.transform=`translate(-50%, -50%) translate(${756+radius*Math.sin(a)}rem,${centerY-radius*Math.cos(a)}rem)`;
-      if(hole && opacity>0){
+      if(hole && Math.abs(a)<=Math.PI){
         // The cord emerges on the left-facing side, then disappears into the bead.
         const entry=2*Math.asin(197/(2*radius));
         const inset=2*Math.asin(145/(2*radius));
