@@ -4,6 +4,8 @@
   const art = hero.querySelector('.hero-art');
   const reduced = matchMedia('(prefers-reduced-motion: reduce)');
   const step = .7;
+  const radius = 650;
+  const centerY = 350 + radius;
   const palette = {
     blue: ['#92bff3','#cee1fa','#76a8d8'],
     pink: ['#e4cfea','#f0c1e6','#bf89cb'],
@@ -30,7 +32,7 @@
   ring.className = 'hero-orbit-thread';
   ring.setAttribute('aria-hidden','true');
   const items = sequence.map(([type,letter,color],index) => {
-    let el;
+    let el, hole, frontThread;
     const [top,bottom,ink]=palette[color];
     if(type==='star') {
       el=document.createElement('img');
@@ -39,8 +41,13 @@
     } else if(type==='letter') {
       el=document.createElement('div');el.className='bead orbit-bead';
       const glyph=document.createElement('span');glyph.textContent=letter;
-      const hole=document.createElement('i');hole.className='hole';
-      el.append(glyph,hole);
+      hole=document.createElement('i');hole.className='hole';
+      const threadSvg=document.createElementNS('http://www.w3.org/2000/svg','svg');
+      threadSvg.setAttribute('viewBox','0 0 394 394');
+      threadSvg.classList.add('bead-thread-front');
+      frontThread=document.createElementNS('http://www.w3.org/2000/svg','path');
+      threadSvg.append(frontThread);
+      el.append(glyph,hole,threadSvg);
       el.style.setProperty('--bead-top',top);
       el.style.setProperty('--bead-bottom',bottom);
       el.style.setProperty('--bead-ink',ink);
@@ -51,7 +58,7 @@
     }
     el.classList.add('hero-orbit-item');el.setAttribute('aria-hidden','true');
     el.dataset.figure=letter||type;
-    return {el,phase:(index-1)*step};
+    return {el,hole,frontThread,phase:(index-1)*step};
   });
   art.replaceChildren(ring,...items.map(item=>item.el));
   art.classList.add('hero-orbit');
@@ -62,14 +69,25 @@
   let angle=0,velocity=0,drag=null,visible=true,last=0,raf=0,hovered=false;
   const smooth=t=>t*t*(3-2*t);
   function render(){
-    for(const {el,phase} of items){
+    for(const {el,hole,frontThread,phase} of items){
       // Recycle on the hidden part of the necklace, never on its visible arc.
       const a=((phase+angle+period/2)%period+period)%period-period/2;
       const distance=Math.abs(a);
       const opacity=1-smooth(Math.min(1,Math.max(0,(distance-.86)/.19)));
       el.style.visibility=opacity>0?'visible':'hidden';
       el.style.opacity=opacity.toFixed(4);
-      el.style.transform=`translate(-50%, -50%) translate(${756+800*Math.sin(a)}rem,${1150-800*Math.cos(a)}rem)`;
+      el.style.transform=`translate(-50%, -50%) translate(${756+radius*Math.sin(a)}rem,${centerY-radius*Math.cos(a)}rem)`;
+      if(hole && opacity>0){
+        // The cord emerges on the left-facing side, then disappears into the bead.
+        const entry=2*Math.asin(197/(2*radius));
+        const inset=2*Math.asin(145/(2*radius));
+        const point=d=>[197+radius*(Math.sin(a-d)-Math.sin(a)),197-radius*(Math.cos(a-d)-Math.cos(a))];
+        const [hx,hy]=point(inset);
+        hole.style.left=`${hx}rem`;hole.style.top=`${hy}rem`;
+        hole.style.transform=`translate(-50%,-50%) rotate(${a-inset}rad)`;
+        const points=Array.from({length:9},(_,i)=>point(entry+(inset-entry)*i/8));
+        frontThread.setAttribute('d',points.map(([x,y],i)=>`${i?'L':'M'}${x.toFixed(3)},${y.toFixed(3)}`).join(' '));
+      }
     }
     art.dataset.rotation=angle.toFixed(4);
     art.setAttribute('aria-valuenow',String(Math.floor(((angle%period+period)%period)/period*359)));
@@ -85,7 +103,7 @@
   art.addEventListener('pointermove',event=>{
     if(!drag)return;
     const scale=art.getBoundingClientRect().width/1512;
-    const delta=(event.clientX-drag.x)/(800*scale);
+    const delta=(event.clientX-drag.x)/(radius*scale);
     angle+=delta;
     velocity=Math.max(-.9,Math.min(.9,delta/Math.max(.016,(event.timeStamp-drag.time)/1000)));
     drag={x:event.clientX,time:event.timeStamp};render();
