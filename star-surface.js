@@ -1,27 +1,33 @@
 "use strict";
 // A closed, rounded star mesh: both faces and the rim share the same geometry.
-function createStarSurface(host, axis) {
+async function createStarSurface(host, axis) {
   const canvas = document.createElement('canvas');
   canvas.className = 'star-surface';
   canvas.setAttribute('aria-hidden', 'true');
   const gl = canvas.getContext('webgl', { alpha: true, antialias: true });
   if (!gl) throw new Error('WebGL unavailable');
-  const corners = Array.from({ length: 10 }, (_, i) => {
-    const a = Math.PI / 2 + i * Math.PI / 5, r = i % 2 ? .46 : 1;
-    return [Math.cos(a) * r, Math.sin(a) * r];
-  });
-  const contour = [];
-  const mix = (a, b, t) => a.map((v, i) => v * (1 - t) + b[i] * t);
-  corners.forEach((p, i) => {
-    const start = mix(p, corners[(i + 9) % 10], .12);
-    const end = mix(p, corners[(i + 1) % 10], .12);
-    for (let j = 0; j <= 8; j++) {
-      const t = j / 8;
-      contour.push(mix(mix(start, p, t), mix(p, end, t), t));
+  const source = new Image();
+  source.src = 'assets/hero-star.png';
+  await source.decode();
+  const probe = document.createElement('canvas');
+  probe.width = source.naturalWidth; probe.height = source.naturalHeight;
+  const ctx = probe.getContext('2d', {willReadFrequently:true});
+  ctx.drawImage(source,0,0);
+  const {data} = ctx.getImageData(0,0,probe.width,probe.height);
+  const contour=[];
+  // Follow the original Figma silhouette, including its asymmetry and soft tips.
+  for(let i=0;i<240;i++) {
+    const a=Math.PI/2+i*Math.PI*2/240;
+    let radius=.1;
+    for(let r=.1;r<1;r+=.002) {
+      const x=Math.round((.5+Math.cos(a)*r/2)*(probe.width-1));
+      const y=Math.round((.5-Math.sin(a)*r/2)*(probe.height-1));
+      if(data[(y*probe.width+x)*4+3]>18) radius=r;
     }
-  });
-  const rings = [[.001,.24],[.38,.235],[.72,.215],[.9,.17],[.975,.09],[1,0],
-    [.975,-.09],[.9,-.17],[.72,-.215],[.38,-.235],[.001,-.24]];
+    contour.push([Math.cos(a)*radius,Math.sin(a)*radius]);
+  }
+  const rings = [[.001,.21],[.38,.21],[.65,.20],[.82,.18],[.93,.13],[.985,.06],[1,0],
+    [.985,-.06],[.93,-.13],[.82,-.18],[.65,-.20],[.38,-.21],[.001,-.21]];
   const points = rings.flatMap(([r,z]) => contour.map(([x,y]) => [x*r,y*r,z]));
   const normals = points.map(() => [0,0,0]), faces = [], n = contour.length;
   const sub = (a,b) => a.map((v,i)=>v-b[i]);
@@ -44,25 +50,27 @@ function createStarSurface(host, axis) {
   gl.attachShader(program,shader(gl.VERTEX_SHADER,`
     attribute vec3 position; attribute vec3 normal;
     uniform float angle; uniform vec3 axis;
-    varying vec3 N; varying vec3 P;
+    varying vec3 N; varying vec3 P; varying vec2 uv;
     vec3 turn(vec3 v) { return v*cos(angle)+cross(axis,v)*sin(angle)+axis*dot(axis,v)*(1.0-cos(angle)); }
     void main() {
-      P=turn(position); N=turn(normal);
+      P=turn(position); N=turn(normal); uv=position.xy*.5+.5;
       float w=1.0-P.z*.16;
-      gl_Position=vec4(P.xy*.85,-P.z*.3,w);
+      gl_Position=vec4(P.xy*.98,-P.z*.3,w);
     }
   `));
   gl.attachShader(program,shader(gl.FRAGMENT_SHADER,`
-    precision mediump float; varying vec3 N; varying vec3 P;
+    precision mediump float; varying vec3 N; varying vec3 P; varying vec2 uv;
+    uniform sampler2D artwork; uniform float angle; uniform vec3 axis;
     void main() {
       vec3 n=normalize(N), l=normalize(vec3(-.6,.85,1.5));
-      vec3 eye=normalize(vec3(0.,0.,5.)-P);
-      float diffuse=max(dot(n,l),0.);
-      float spec=pow(max(dot(n,normalize(l+eye)),0.),48.);
-      float rim=pow(1.-max(dot(n,eye),0.),3.);
-      vec3 base=vec3(.85,.94,.25);
-      vec3 color=base*(.48+.53*diffuse)+vec3(1.,1.,.78)*spec*.48+vec3(.13,.14,.025)*rim;
-      gl_FragColor=vec4(color,1.);
+      vec4 original=texture2D(artwork,uv);
+      vec3 edge=vec3(.86,.93,.36);
+      float facing=abs(cos(angle)+axis.z*axis.z*(1.-cos(angle)));
+      vec3 pigment=mix(edge,original.rgb,smoothstep(.15,.8,facing));
+      float shade=.88+.12*max(dot(n,l),0.);
+      vec3 color=pigment*mix(shade,1.,facing*.85);
+      float alpha=mix(1.,original.a,smoothstep(.3,.8,facing));
+      gl_FragColor=vec4(color,alpha);
     }
   `));
   gl.linkProgram(program);
@@ -73,6 +81,15 @@ function createStarSurface(host, axis) {
     gl.bufferData(gl.ARRAY_BUFFER,new Float32Array(faces.flatMap(f=>f.flatMap(i=>data[i]))),gl.STATIC_DRAW);
     const loc=gl.getAttribLocation(program,name);gl.enableVertexAttribArray(loc);gl.vertexAttribPointer(loc,3,gl.FLOAT,false,0,0);
   }
+  const texture=gl.createTexture();
+  gl.bindTexture(gl.TEXTURE_2D,texture);
+  gl.pixelStorei(gl.UNPACK_FLIP_Y_WEBGL,true);
+  gl.texImage2D(gl.TEXTURE_2D,0,gl.RGBA,gl.RGBA,gl.UNSIGNED_BYTE,source);
+  gl.texParameteri(gl.TEXTURE_2D,gl.TEXTURE_MIN_FILTER,gl.LINEAR);
+  gl.texParameteri(gl.TEXTURE_2D,gl.TEXTURE_MAG_FILTER,gl.LINEAR);
+  gl.texParameteri(gl.TEXTURE_2D,gl.TEXTURE_WRAP_S,gl.CLAMP_TO_EDGE);
+  gl.texParameteri(gl.TEXTURE_2D,gl.TEXTURE_WRAP_T,gl.CLAMP_TO_EDGE);
+  gl.enable(gl.BLEND);gl.blendFunc(gl.SRC_ALPHA,gl.ONE_MINUS_SRC_ALPHA);
   gl.uniform3fv(gl.getUniformLocation(program,'axis'),axis);
   const angleLoc=gl.getUniformLocation(program,'angle');
   gl.enable(gl.DEPTH_TEST); gl.clearColor(0,0,0,0);

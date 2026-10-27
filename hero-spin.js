@@ -49,13 +49,14 @@
     lastRendered: null,
   }));
   const starState = states.find(state => state.el === star);
-  try {
-    starState.renderer = createStarSurface(star, starState.axis);
-  } catch {
-    star.append(starImage);
-    starImage.removeAttribute("class");
-    starImage.style.cssText = "width:100%;height:100%;object-fit:contain";
-  }
+  star.append(starImage);
+  starImage.removeAttribute("class");
+  starImage.style.cssText = "width:100%;height:100%;object-fit:contain";
+  createStarSurface(star, starState.axis).then(renderer => {
+    starImage.remove();
+    starState.renderer = renderer;
+    starState.lastRendered = null;
+  }).catch(() => {});
   let visible = true,
     last = 0,
     raf = 0;
