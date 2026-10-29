@@ -6,12 +6,6 @@
     title: `Семейное фото ${index + 1}`,
     credit: "Фото из семейного архива",
   }));
-  const carouselPhotos = Array.from({ length: 6 }, (_, index) => ({
-    id: `carousel-${index + 1}`,
-    src: `assets/media/photos_carusel/horizonal_scroll${String(index + 1).padStart(2, "0")}.webp`,
-    title: `Совместное творчество ${index + 1}`,
-    credit: "Фото совместного творчества",
-  }));
   const voiceTracks = [
     {
       title: "Голосовое сообщение",
@@ -115,14 +109,6 @@
     });
     content.replaceChildren();
     opener?.focus({ preventScroll: true });
-  });
-  document.querySelector(".polaroids").addEventListener("click", (event) => {
-    const button = event.target.closest("[data-photo]");
-    if (button)
-      openPhoto(
-        carouselPhotos.find((p) => p.id === button.dataset.photo),
-        button,
-      );
   });
   const time = (value) =>
     `${Math.floor((value || 0) / 60)}:${String(Math.floor((value || 0) % 60)).padStart(2, "0")}`;
