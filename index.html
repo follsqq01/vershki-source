@@ -9,8 +9,9 @@
     />
     <meta name="theme-color" content="#e4f371" />
     <title>Вершки — творчество вместе</title>
-    <link rel="stylesheet" href="style.css" />
-    <link rel="stylesheet" href="motion.css?v=orbit6" />
+    <link rel="stylesheet" href="style.css?v=mobile-free-scroll-4" />
+    <link rel="stylesheet" href="motion.css?v=footer-logo-7" />
+  <link rel="stylesheet" href="page-transition.css" />
   </head>
   <body>
     <main>
@@ -20,10 +21,7 @@
           подберём творческое занятие, которое можно попробовать вместе с
           бабушкой или дедушкой.
         </p>
-        <h1 class="brand" aria-label="Вершки">
-          <span>в</span><span>е</span><span>р</span><span>ш</span><span>к</span
-          ><span>и</span>
-        </h1>
+        <h1 class="brand" aria-label="Вершки"><img src="assets/media/logo.svg" alt="Вершки" /></h1>
         <div class="hero-art">
           <div class="thread thread-back">
             <img src="assets/figma/a1a5b.svg" alt="" />
@@ -83,28 +81,6 @@
               >
                 аудио
               </button>
-              <button
-                type="button"
-                role="tab"
-                id="tab-voice"
-                aria-controls="media-panel"
-                aria-selected="false"
-                tabindex="-1"
-                data-tab="voice"
-              >
-                голосовые
-              </button>
-              <button
-                type="button"
-                role="tab"
-                id="tab-circles"
-                aria-controls="media-panel"
-                aria-selected="false"
-                tabindex="-1"
-                data-tab="circles"
-              >
-                кружочки
-              </button>
             </div>
             <div
               id="media-panel"
@@ -120,24 +96,28 @@
             <span></span><span></span><span></span>
           </div>
           <div class="message incoming">
-            <p class="sender">Бабуля!</p>
-            <p class="bubble">
-              Привет, Танечка! как у тебя дела Всё хорошо? Когда заглянешь ко
-              мне, очень жду тебя пить чай!
-            </p>
+            <p class="sender">Бабуля</p>
+            <p class="bubble">Привет , внуча ! как у тебя дела ? Когда ко мне придёшь . Соскучилась уже !.</p>
             <p class="receipt">Read 9:39</p>
           </div>
           <div class="message outgoing first-reply">
-            <p class="bubble">Привет! Всё хорошо, на учёбе</p>
+            <p class="sender">Я</p>
+            <p class="bubble">Привет!! Всё хорошо на учёбе<br />Пока не знаю когда смогу :(</p>
           </div>
-          <div class="message outgoing second-reply">
-            <p class="bubble">Не смогу зайти :(</p>
+          <div class="message incoming third-message">
+            <p class="sender">Бабуля</p>
+            <p class="bubble">Понимаю , учёба .. но ты хоть ненадолго забегай , я всегда тебя жду .</p>
             <p class="receipt">Read 9:39</p>
           </div>
+          <div class="message outgoing fourth-message">
+            <p class="sender">Я</p>
+            <p class="bubble">Да бабуль, я постараюсь на выходных ❤️</p>
+          </div>
           <div class="message voice">
+            <p class="sender">Бабуля · голосовое</p>
             <div
               class="voice-bubble"
-              aria-label="Голосовое сообщение — демонстрационная озвучка"
+              aria-label="Бабуля, голосовое сообщение, 0:15"
             >
               <button
                 type="button"
@@ -149,7 +129,7 @@
               ><span class="wave" aria-hidden="true"
                 ><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i
                 ><i></i><i></i><i></i><i></i><i></i><i></i></span
-              ><span class="duration">0:07</span
+              ><span class="duration">0:15</span
               ><span class="reaction" aria-hidden="true">😭</span>
             </div>
             <p class="receipt">Read 9:39</p>
@@ -275,45 +255,61 @@
         </button>
       </section>
 
-      <section class="story" aria-label="Новый повод побыть вместе">
-        <p class="story-intro">
-          Таким поводом может стать творчество.<br />
-          Оно помогает выйти из семейных ролей<br />
-          и попробовать что-то новое.
-        </p>
-        <div class="story-art" aria-hidden="true">
-          <div class="story-star">
-            <img src="assets/figma/29220.svg" alt="" />
-          </div>
-          <div class="story-thread st-one">
-            <img src="assets/figma/3633f.svg" alt="" />
-          </div>
-          <div class="story-thread st-two">
-            <img src="assets/figma/58758.svg" alt="" />
-          </div>
-          <div class="story-thread st-three">
-            <img src="assets/figma/8daec.svg" alt="" />
-          </div>
-          <div class="story-thread st-four">
-            <img src="assets/figma/1e3d4.svg" alt="" />
-          </div>
-          <div class="bead blue story-blue">
-            <span>м</span><i class="hole"></i>
-          </div>
-          <div class="bead pink story-pink">
-            <span>ы</span><i class="hole"></i>
-          </div>
-          <img class="shared-photo" src="assets/figma/ffa82.png" alt="" />
-          <div class="story-triangle">
-            <img src="assets/figma/da00b.svg" alt="" />
+      <section class="story story-figma" id="story" aria-label="Творчество вместе — горизонтальная история">
+        <div class="story-sticky">
+          <div class="story-track">
+            <div class="story-canvas">
+              <img class="story-asset" data-figma-node="1:141" src="assets/story/1-141.webp?v=transparent-140" alt="" draggable="false" decoding="async" style="left:3349.1782px;top:425.7032px;width:130.9265px;height:155.8418px;" />
+              <img class="story-asset" data-figma-node="1:142" src="assets/story/1-142.webp?v=transparent-140" alt="" draggable="false" decoding="async" style="left:3637.9739px;top:520.5491px;width:185.1206px;height:83.5791px;" />
+              <img class="story-asset" data-figma-node="1:143" src="assets/story/1-143.webp?v=transparent-140" alt="" draggable="false" decoding="async" style="left:2782.3760px;top:184.1987px;width:115.0854px;height:167.7307px;" />
+              <img class="story-asset" data-figma-node="1:144" src="assets/story/1-144.webp?v=transparent-140" alt="" draggable="false" decoding="async" style="left:3180.0000px;top:141.2450px;width:309.0048px;height:299.3470px;" />
+              <img class="story-asset" data-figma-node="1:150" src="assets/story/1-150.webp?v=transparent-140" alt="" draggable="false" decoding="async" style="left:4074.8987px;top:131.7051px;width:446.8167px;height:302.7933px;" />
+              <img class="story-asset" data-figma-node="1:151" src="assets/story/1-151.webp?v=transparent-140" alt="" draggable="false" decoding="async" style="left:2394.5396px;top:172.9960px;width:546.3610px;height:545.7757px;" />
+              <img class="story-asset" data-figma-node="1:157" src="assets/story/1-157.webp?v=transparent-140" alt="" draggable="false" decoding="async" style="left:1975.0681px;top:502.4862px;width:230.5300px;height:59.9815px;" />
+              <img class="story-asset" data-figma-node="1:158" src="assets/story/1-158.webp?v=transparent-140" alt="" draggable="false" decoding="async" style="left:2234.4048px;top:445.2233px;width:311.9641px;height:145.4383px;" />
+              <img class="story-asset" data-figma-node="1:159" src="assets/story/1-159.webp?v=transparent-140" alt="" draggable="false" decoding="async" style="left:966.0000px;top:67.0951px;width:366.5950px;height:355.1373px;" />
+              <p class="story-copy" data-figma-node="1:165" style="left:389.0000px;top:102.0000px;width:440.0000px;">Мы любим своих бабушек и дедушек, но среди учёбы, работы
+и повседневных дел всё сложнее находить время друг для друга.</p>
+              <p class="story-copy" data-figma-node="1:166" style="left:2861.0000px;top:544.0000px;width:499.0000px;">Просто привычные сценарии редко дают повод открыть друг друга с новой стороны.
+
+Общение постепенно становится предсказуемым, а эмоциональная
+близость может ослабевать.</p>
+              <p class="story-copy" data-figma-node="1:167" style="left:4125.0000px;top:495.0000px;width:542.0000px;">Когда вы оба оказываетесь
+в непривычной ситуации, исчезают привычные роли. Можно вместе ошибаться, придумывать, экспериментировать и удивляться.
+
+Так появляются новые общие воспоминания, неожиданные разговоры и ещё один повод встретиться снова.</p>
+              <p class="story-copy" data-figma-node="1:168" style="left:1001.0000px;top:512.0000px;width:627.0000px;">А когда наконец встречаемся, часто всё идёт
+по знакомому сценарию: чай, разговоры о делах, телевизор. И так из раза в раз.
+
+В привычных встречах нет ничего плохого.
+Но со временем кажется, что вы уже всё друг о друге знаете и новых тем для разговора почти не осталось.</p>
+              <p class="story-copy" data-figma-node="1:169" style="left:2104.0000px;top:184.0000px;width:463.0000px;">Хотя на самом деле у каждого из вас есть целый мир интересов, историй
+и идей, о которых другой может даже
+не догадываться.</p>
+              <p class="story-copy" data-figma-node="1:170" style="left:3514.0000px;top:184.0000px;width:509.0000px;">Чтобы этого не произошло, необязательно видеться каждый день или искать общие увлечения. Иногда достаточно вместе
+попробовать что-то новое.</p>
+              <img class="story-asset" data-figma-node="1:171" src="assets/story/1-171.webp?v=transparent-140" alt="" draggable="false" decoding="async" style="left:1283.8652px;top:156.0849px;width:202.3923px;height:26.9076px;" />
+              <img class="story-asset" data-figma-node="1:172" src="assets/story/1-172.webp?v=transparent-140" alt="" draggable="false" decoding="async" style="left:1620.5111px;top:164.2199px;width:156.9949px;height:129.5193px;" />
+              <img class="story-asset" data-figma-node="1:173" src="assets/story/1-173.webp?v=transparent-140" alt="" draggable="false" decoding="async" style="left:876.2432px;top:271.6589px;width:166.7132px;height:116.6034px;" />
+              <img class="story-asset" data-figma-node="1:174" src="assets/story/1-174.webp?v=transparent-140" alt="" draggable="false" decoding="async" style="left:4287.0000px;top:218.0000px;width:189.0000px;height:187.4877px;" />
+              <img class="story-asset" data-figma-node="1:180" src="assets/story/1-180.webp?v=transparent-140" alt="" draggable="false" decoding="async" style="left:4073.3989px;top:256.9441px;width:267.9414px;height:178.5545px;" />
+              <img class="story-asset" data-figma-node="1:181" src="assets/story/1-181.webp?v=transparent-140" alt="" draggable="false" decoding="async" style="left:4442.0000px;top:57.0000px;width:158.6924px;height:154.2970px;" />
+              <img class="story-asset" data-figma-node="1:185" src="assets/story/1-185.webp?v=transparent-140" alt="" draggable="false" decoding="async" style="left:46.4523px;top:374.3067px;width:276.8275px;height:77.2447px;" />
+              <img class="story-asset" data-figma-node="1:186" src="assets/story/1-186.webp?v=transparent-140" alt="" draggable="false" decoding="async" style="left:240.0000px;top:175.9995px;width:421.0000px;height:470.6317px;" />
+              <img class="story-asset" data-figma-node="1:192" src="assets/story/1-192.webp?v=transparent-140" alt="" draggable="false" decoding="async" style="left:572.6373px;top:469.8222px;width:148.7874px;height:19.1682px;" />
+              <img class="story-asset" data-figma-node="1:193" src="assets/story/1-193.webp?v=transparent-140" alt="" draggable="false" decoding="async" style="left:0.0000px;top:264.0000px;width:236.7957px;height:455.3878px;" />
+              <img class="story-asset" data-figma-node="1:196" src="assets/story/1-196.webp?v=new-bead-196" alt="" draggable="false" decoding="async" style="left:609.0007px;top:206.0001px;width:427.4656px;height:427.4656px;" />
+              <img class="story-asset" data-figma-node="1:210" src="assets/story/1-210.webp?v=transparent-140" alt="" draggable="false" decoding="async" style="left:1586.0013px;top:108.0000px;width:594.5773px;height:594.5772px;" />
+              <img class="story-asset" data-figma-node="1:238" src="assets/story/1-238.webp?v=transparent-140" alt="" draggable="false" decoding="async" style="left:2070.0000px;top:403.0000px;width:320.0000px;height:320.0000px;" />
+              <img class="story-asset" data-figma-node="1:242" src="assets/story/1-242.webp?v=transparent-140" alt="" draggable="false" decoding="async" style="left:3360.0009px;top:398.0000px;width:345.7811px;height:345.7810px;" />
+              <img class="story-asset" data-figma-node="1:256" src="assets/story/1-256.webp?v=transparent-140" alt="" draggable="false" decoding="async" style="left:1373.3682px;top:67.7377px;width:325.5232px;height:250.9990px;" />
+              <img class="story-asset" data-figma-node="1:260" src="assets/story/1-260.webp?v=transparent-140" alt="" draggable="false" decoding="async" style="left:3101.5112px;top:103.2199px;width:156.9946px;height:129.5193px;" />
+              <img class="story-asset" data-figma-node="1:261" src="assets/story/1-261.webp?v=transparent-140" alt="" draggable="false" decoding="async" style="left:2830.2332px;top:25.3295px;width:337.3262px;height:271.1458px;" />
+              <img class="story-asset" data-figma-node="1:265" src="assets/story/1-265.webp?v=transparent-140" alt="" draggable="false" decoding="async" style="left:3773.4675px;top:340.4677px;width:337.3264px;height:271.1458px;" />
+              <img class="story-asset" data-figma-node="6:2" src="assets/story/6-2.webp?v=transparent-140" alt="" draggable="false" decoding="async" style="left:1665.5787px;top:181.9140px;width:128.9913px;height:142.5481px;" />
+            </div>
           </div>
         </div>
-        <p class="story-outro">
-          Так бабушка, дедушка и внук<br />
-          оказываются в одном процессе.<br />
-          Можно вместе выбирать, придумывать<br />
-          и узнавать друг друга с другой стороны.
-        </p>
       </section>
 
       <section class="test panel" aria-labelledby="test-heading">
@@ -321,21 +317,15 @@
           class="bead-title"
           id="test-heading"
           aria-label="А что для вас"
-          data-letters="ачтодлява"
+          data-letters="ачтодлявас"
         ></h2>
         <p>
           Ответьте на несколько вопросов о вас и вашем совместном времени — и мы
           подберём занятие, которое захочется попробовать вместе.
         </p>
-        <button
-          class="pill"
-          id="test-link"
-          type="button"
-          aria-describedby="test-status"
-        >
+        <a class="pill" id="test-link" href="quiz.html">
           перейти →
-        </button>
-        <span class="sr-only" id="test-status">Тест скоро появится</span>
+        </a>
       </section>
 
       <section class="faq" aria-labelledby="faq-heading">
@@ -343,7 +333,7 @@
           class="bead-title"
           id="faq-heading"
           aria-label="Вопросы и ответы"
-          data-letters="f&q"
+          data-letters="faq"
         ></h2>
         <div class="faq-grid">
           <details>
@@ -394,8 +384,9 @@
         </div>
       </section>
     </main>
-    <footer aria-hidden="true"></footer>
-    <div class="notice" role="status" hidden>Тест скоро появится</div>
+    <footer class="site-footer">
+      <a href="index.html" aria-label="Вершки — на главную"><img src="assets/media/logo.svg" alt="Вершки" /></a>
+    </footer>
     <dialog class="media-dialog" aria-labelledby="media-title">
       <button type="button" class="dialog-close" aria-label="Закрыть просмотр">
         ×
@@ -404,9 +395,11 @@
       <div class="dialog-content"></div>
       <p class="dialog-caption"></p>
     </dialog>
-    <script src="landing.js"></script>
-    <script src="motion.js"></script>
-    <script src="hero-spin.js?v=orbit6"></script>
-    <script src="media.js"></script>
+    <script src="landing.js?v=footer-logo-7"></script>
+    <script src="motion.js?v=mobile-free-scroll-4"></script>
+  <script src="hero-spin.js?v=mobile-bead-spacing-2"></script>
+    <script src="media.js?v=stats-audio-footer-5"></script>
+    <script src="faq.js"></script>
+    <script src="story-scroll.js?v=mobile-pinned-3"></script>
   </body>
 </html>

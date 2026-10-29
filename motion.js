@@ -241,8 +241,6 @@
     frame = requestAnimationFrame(render);
   }
   frame = requestAnimationFrame(render);
-  // The chat owns scrolling only during this bounded sequence. Every exit path
-  // restores body styles, including skip, reduced motion, resize and pagehide.
   const scene = document.querySelector(".conversation");
   const messages = scene.querySelector(".messages");
   const bubbles = [...messages.querySelectorAll(".message")];
@@ -253,67 +251,11 @@
   const replay = scene.querySelector(".scene-replay");
   let active = false,
     played = false,
-    lockY = 0,
-    timers = [],
-    previousStyle = null;
+    timers = [];
   scene.classList.add("chat-ready");
-  const editable = (target) =>
-    target.closest("input,textarea,select,[contenteditable=true]");
-  function stopScroll(event) {
-    if (active && !event.target.closest(".media-panel,.media-dialog"))
-      event.preventDefault();
-  }
-  function stopKeys(event) {
-    if (
-      active &&
-      [
-        "ArrowUp",
-        "ArrowDown",
-        "PageUp",
-        "PageDown",
-        "Home",
-        "End",
-        " ",
-      ].includes(event.key) &&
-      !editable(event.target) &&
-      !event.target.closest("button,[role=tab],.media-dialog")
-    )
-      event.preventDefault();
+  document.addEventListener("keydown", (event) => {
     if (event.key === "Escape" && active) finish();
-  }
-  window.addEventListener("wheel", stopScroll, { passive: false });
-  window.addEventListener("touchmove", stopScroll, { passive: false });
-  document.addEventListener("keydown", stopKeys);
-  function lock() {
-    const rect = scene.getBoundingClientRect(),
-      mr = messages.getBoundingClientRect();
-    const target = rect.height <= innerHeight - 24 ? rect : mr;
-    lockY = Math.max(
-      0,
-      scrollY + target.top - Math.max(12, (innerHeight - target.height) / 2),
-    );
-    previousStyle = {
-      position: body.style.position,
-      top: body.style.top,
-      left: body.style.left,
-      width: body.style.width,
-    };
-    body.style.position = "fixed";
-    body.style.top = `${-lockY}px`;
-    body.style.left = "0";
-    body.style.width = "100%";
-    body.classList.add("scene-locked");
-  }
-  function unlock() {
-    if (!previousStyle) return;
-    Object.assign(body.style, previousStyle);
-    previousStyle = null;
-    body.classList.remove("scene-locked");
-    const scrollBehavior = document.documentElement.style.scrollBehavior;
-    document.documentElement.style.scrollBehavior = "auto";
-    window.scrollTo(0, lockY);
-    document.documentElement.style.scrollBehavior = scrollBehavior;
-  }
+  });
   function later(fn, ms) {
     timers.push(setTimeout(fn, ms));
   }
@@ -332,7 +274,6 @@
     status.textContent = "";
     skip.hidden = true;
     replay.hidden = false;
-    unlock();
   }
   function start() {
     if (active) return;
@@ -352,18 +293,20 @@
     scene.style.setProperty("--scene-progress", "0");
     status.textContent = "Бабуля печатает…";
     typing.classList.add("is-typing");
-    lock();
-    [1400, 4200, 6300, 8400].forEach((delay, index) =>
+    [1300, 3600, 6000, 8500, 10800].forEach((delay, index) =>
       later(() => {
         typing.classList.remove("is-typing");
         bubbles[index].classList.add("is-sent");
         bubbles[index].removeAttribute("inert");
-        status.textContent = `Переписка · ${index + 1} из 4`;
-        scene.style.setProperty("--scene-progress", String((index + 1) / 5));
+        status.textContent = `Переписка · ${index + 1} из ${bubbles.length}`;
+        scene.style.setProperty(
+          "--scene-progress",
+          String((index + 1) / (bubbles.length + 1)),
+        );
       }, delay),
     );
-    later(() => reaction.classList.add("is-reacted"), 9700);
-    later(finish, 11100);
+    later(() => reaction.classList.add("is-reacted"), 12100);
+    later(finish, 14500);
   }
   skip.onclick = finish;
   replay.onclick = start;

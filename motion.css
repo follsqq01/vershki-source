@@ -2,9 +2,6 @@
 html {
   scrollbar-gutter: stable;
 }
-body.scene-locked {
-  overscroll-behavior: none;
-}
 .hero-art,
 .story-art {
   perspective: 1200px;
@@ -212,6 +209,42 @@ body.scene-locked {
   animation-play-state: paused;
 }
 /* A deterministic, one-shot chat scene. Hidden messages still reserve layout. */
+.conversation {
+  height: auto;
+  align-items: start;
+}
+.conversation .messages {
+  display: flex;
+  flex-direction: column;
+  gap: 13rem;
+  height: auto;
+  padding: 12rem 0 8rem;
+  min-height: 723rem;
+}
+.conversation .message {
+  position: relative;
+  inset: auto;
+  flex: none;
+  width: fit-content;
+  max-width: min(489rem, 100%);
+}
+.conversation .message.incoming,
+.conversation .message.voice { align-self: flex-start; }
+.conversation .message.outgoing { align-self: flex-end; }
+.conversation .scene-controls {
+  margin-top: auto;
+  min-height: 36rem;
+  flex: none;
+}
+.conversation .sender { margin-bottom: 8rem; }
+.conversation .receipt { margin-top: 10rem; }
+@media (max-width: 700px) {
+  .conversation .messages { gap: 24px; min-height: 0; padding: 0; }
+  .conversation .message { max-width: 94%; }
+  .conversation .sender { margin-bottom: 8px; }
+  .conversation .receipt { margin-top: 10px; }
+  .conversation .scene-controls { min-height: 34px; }
+}
 .chat-ready .message {
   opacity: 0;
   visibility: hidden;
@@ -347,9 +380,9 @@ body.scene-locked {
   min-height: 369rem;
 }
 .media-tabs {
-  display: flex;
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
   align-items: center;
-  justify-content: space-between;
   gap: 7rem;
   margin-bottom: 10rem;
 }
@@ -366,15 +399,20 @@ body.scene-locked {
 .media-tabs button[aria-selected="true"] {
   color: #505050;
 }
-.media-tabs button[aria-selected="true"]::after {
+.media-tabs button::after {
   content: "";
   position: absolute;
   bottom: 0;
-  left: 10%;
-  right: 10%;
+  left: 28%;
+  right: 28%;
   height: 1px;
   background: currentColor;
+  transform: scaleX(0);
+  transform-origin: left center;
+  transition: transform 280ms cubic-bezier(.22,.61,.36,1);
 }
+.media-tabs button[aria-selected="true"]::after { transform: scaleX(1); }
+.media-tabs button { text-align: center; transition: color 200ms ease; }
 .media-panel {
   height: 310rem;
   overflow: auto;
@@ -573,7 +611,7 @@ body.scene-locked {
     min-height: 0;
   }
   .media-tabs {
-    gap: 7px;
+    gap: 5px;
     margin-bottom: 10px;
   }
   .media-tabs button {
@@ -856,4 +894,136 @@ main,
 }
 .hero-orbit .bead-thread-front path {
   fill:none;stroke:#696969;stroke-width:2;stroke-linecap:round;
+}
+
+/* Original Figma scene, 4734 × 760. Layers preserve source positions and stacking. */
+.story-figma {
+  --story-scale: 1;
+  --story-width: 4734px;
+  --story-height: 760px;
+  height: calc(100vh + 3222rem);
+}
+.story-figma .story-sticky {
+  position: sticky;
+  top: 0;
+  height: 100vh;
+  height: 100svh;
+  overflow: hidden;
+  background: #fff;
+}
+.story-figma .story-track {
+  position: absolute;
+  top: calc((100% - var(--story-height)) / 2);
+  width: var(--story-width);
+  height: var(--story-height);
+  will-change: transform;
+}
+.story-canvas {
+  position: relative;
+  width: 4734px;
+  height: 760px;
+  transform: scale(var(--story-scale));
+  transform-origin: top left;
+}
+.story-asset,.story-copy { position: absolute; }
+.story-asset {
+  max-width: none;
+  pointer-events: none;
+  user-select: none;
+}
+.story-copy {
+  margin: 0;
+  font-family: FreeSans, Arial, sans-serif;
+  font-weight: 400;
+  font-size: 26.8948936462px;
+  line-height: 26px;
+  letter-spacing: -1.3447446823px;
+  color: #5c5c5c;
+  white-space: pre-line;
+}
+@media (prefers-reduced-motion: reduce) {
+  .media-tabs button::after { transition: none; }
+}
+
+/* Let all media fit inside the profile, without an inner scrollbar. */
+.conversation { padding-block:33rem; }
+.conversation .messages { min-height:0; padding-bottom:44rem; }
+.profile { height:auto; min-height:760rem; }
+.profile-library { min-height:0; margin-top:30rem; }
+.media-panel { height:auto; overflow:visible; }
+.hero-orbit .supplied-bead { width:420rem; height:420rem; object-fit:contain; }
+@media(max-width:700px) {
+ .hero-orbit .supplied-bead { width:500rem; height:500rem; }
+ .conversation { padding-block:20px; }
+ .profile { min-height:0; }
+ .profile-library { margin-top:20px; }
+ .media-panel { height:auto; overflow:visible; }
+ .media-grid { grid-template-columns:repeat(2,minmax(0,1fr)); gap:7px; }
+ .photo-thumb { aspect-ratio:1; }
+ .conversation .messages { padding-bottom:40px; }
+}
+/* Keep the profile aligned with the chat and equal outer padding. */
+.conversation .profile { align-self:stretch; }
+
+
+
+/* On mobile the story and invitation share one pinned viewport. */
+.story-window { position:absolute; inset:0; overflow:hidden; }
+@media(max-width:700px) {
+ .story-figma .story-sticky { display:flex; flex-direction:column; height:100vh; height:100svh; }
+ .story-window { position:relative; inset:auto; width:100%; flex:1 1 auto; min-height:0; }
+ .story-sticky > .test { flex:0 0 42svh; height:auto; min-height:320px; margin:0 16px 16px; padding:28px 20px; gap:18px; border-radius:20px; }
+ .story-sticky > .test > p { font-size:clamp(18px,4.6vw,24px); line-height:1.05; letter-spacing:-.8px; }
+ .story-sticky > .test .pill { margin-top:0; height:44px; min-height:44px; font-size:23px; }
+ .story-sticky > .test .bead-title { flex-shrink:0; }
+}
+@media(max-width:700px) and (max-height:550px) {
+ .story-sticky > .test { flex-basis:auto; min-height:0; padding:12px 16px; gap:8px; margin-bottom:8px; }
+ .story-sticky > .test > p { font-size:16px; }
+ .story-sticky > .test .pill { height:36px; min-height:36px; font-size:18px; }
+}
+
+/* Larger mobile photo cards, with enough panel height to keep them below copy. */
+@media(max-width:700px) {
+ .together { height:620px; }
+ .together .orbit-card { width:210px; height:245px; }
+}
+
+.media-tabs { grid-template-columns:repeat(2,minmax(0,1fr)); }
+/* Draw controls independently of the font's triangle/pause glyph metrics. */
+.play, .track-button { position:relative; padding:0; font-size:0; flex-shrink:0; }
+.play::before, .track-button::before {
+ content:''; position:absolute; left:50%; top:50%;
+ width:34%; height:42%; background:currentColor;
+ clip-path:polygon(0 0,100% 50%,0 100%);
+ transform:translate(-42%,-50%);
+}
+.play[aria-pressed=true]::before, .track-button[aria-pressed=true]::before {
+ clip-path:polygon(0 0,35% 0,35% 100%,0 100%,0 0,65% 0,100% 0,100% 100%,65% 100%,65% 0);
+ transform:translate(-50%,-50%);
+}
+#faq-heading { letter-spacing:0; }
+#faq-heading > span { padding:0 0 .12em; line-height:1; }
+.stat-ball[role=button], .stat-labels li { cursor:pointer; }
+.stat-ball[role=button] > span { opacity:0; transition:opacity .22s ease; }
+.stat-ball.stat-active > span { opacity:1; }
+.stat-labels li { transition:background .22s ease, box-shadow .22s ease; }
+.stat-labels li.stat-active { background:var(--fact-color); box-shadow:0 0 0 1rem currentColor; }
+.stat-ball:focus-visible, .stat-labels li:focus-visible { outline:2px dashed #505050; outline-offset:5px; }
+.site-footer { height:340rem; padding:0 45rem 40rem; display:flex; align-items:flex-end; justify-content:center; margin-top:60rem; }
+.site-footer::before { bottom:190rem; }
+.site-footer a { display:block; position:relative; z-index:1; flex-shrink:0; }
+.site-footer img { width:280rem; height:auto; zoom:1; }
+.site-footer.footer-ready a { opacity:0; transform:translateY(20px) scale(.94); transition:opacity .8s ease, transform .9s cubic-bezier(.22,.61,.36,1); }
+.site-footer.footer-visible a { opacity:1; transform:translateY(0) scale(1); }
+.site-footer a:hover img { transform:translateY(-4px); }
+.site-footer img { transition:transform .3s ease; }
+@media(max-width:700px) {
+ .site-footer { height:220px; padding:0 22px 30px; margin-top:40px; }
+ .site-footer::before { bottom:130px; }
+ .site-footer img { width:190px; max-width:65vw; }
+}
+@media(prefers-reduced-motion:reduce) {
+ .site-footer.footer-ready a { opacity:1; transform:none; transition:none; }
+ .site-footer img, .site-footer a:hover img { transform:none; transition:none; }
 }

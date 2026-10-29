@@ -42,19 +42,19 @@
   ];
   const voiceTracks = [
     {
-      title: "Приходи на чай",
-      src: "assets/media/voice-tea.wav",
-      caption: "Демо · синтезированный голос",
+      title: "Голосовое сообщение",
+      src: "assets/media/gs.mp3",
+      caption: "29.10",
     },
     {
-      title: "Смотри, что получилось",
-      src: "assets/media/voice-craft.wav",
-      caption: "Демо · синтезированный голос",
+      title: "Город влюблённых",
+      src: "assets/media/anna-german-gorod-vljublennykh.mp3",
+      caption: "Анна Герман",
     },
     {
-      title: "Тот самый пирог",
-      src: "assets/media/voice-recipe.wav",
-      caption: "Демо · синтезированный голос",
+      title: "Дельтаплан",
+      src: "assets/media/valerijj-leontev-deltaplan.mp3",
+      caption: "Валерий Леонтьев",
     },
   ];
   const dialog = document.querySelector(".media-dialog");
@@ -211,7 +211,16 @@
     row.append(button, info, seek);
     return row;
   }
+  let activeTab = null;
+  let panelAnimation = null;
   function selectTab(kind, focus = false) {
+    if (kind === activeTab) {
+      if (focus) tabs.find(tab => tab.dataset.tab === kind)?.focus();
+      return;
+    }
+    const animate = activeTab !== null && !matchMedia('(prefers-reduced-motion: reduce)').matches;
+    activeTab = kind;
+    panelAnimation?.cancel();
     panel.querySelectorAll(".track").forEach((row) => {
       row._player?.pause();
       media.delete(row._player);
@@ -263,6 +272,12 @@
       const list = make("div", "track-list");
       voiceTracks.forEach((item) => list.append(track(item, true)));
       panel.append(list);
+    }
+    if (animate) {
+      panelAnimation = panel.animate(
+        [{ opacity: 0, transform: 'translateY(6px)' }, { opacity: 1, transform: 'translateY(0)' }],
+        { duration: 260, easing: 'cubic-bezier(.22,.61,.36,1)' }
+      );
     }
   }
   tabs.forEach((tab, index) => {
