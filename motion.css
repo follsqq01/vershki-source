@@ -1010,7 +1010,10 @@ main,
 .stat-labels li { transition:background .22s ease, box-shadow .22s ease; }
 .stat-labels li.stat-active { background:var(--fact-color); box-shadow:0 0 0 1rem currentColor; }
 .stat-ball:focus-visible, .stat-labels li:focus-visible { outline:2px dashed #505050; outline-offset:5px; }
-.site-footer { height:340rem; padding:0 45rem 40rem; display:flex; align-items:flex-end; justify-content:center; margin-top:60rem; }
+/* The content slides over the footer, revealing it as the page ends. */
+body { isolation:isolate; }
+main { position:relative; z-index:1; background:#fff; }
+.site-footer { position:sticky; bottom:0; z-index:0; height:340rem; padding:0 45rem 40rem; display:flex; align-items:flex-end; justify-content:center; margin-top:60rem; }
 .site-footer::before { bottom:190rem; }
 .site-footer a { display:block; position:relative; z-index:1; flex-shrink:0; }
 .site-footer img { width:280rem; height:auto; zoom:1; }
@@ -1024,6 +1027,7 @@ main,
  .site-footer img { width:190px; max-width:65vw; }
 }
 @media(prefers-reduced-motion:reduce) {
+ .site-footer { position:relative; }
  .site-footer.footer-ready a { opacity:1; transform:none; transition:none; }
  .site-footer img, .site-footer a:hover img { transform:none; transition:none; }
 }
