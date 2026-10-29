@@ -1,45 +1,17 @@
 "use strict";
 (() => {
-  const photos = [
-    {
-      id: "pottery",
-      src: "assets/media/pottery.jpg",
-      title: "За гончарным кругом",
-      credit: "cottonbro studio · Pexels",
-    },
-    {
-      id: "painting",
-      src: "assets/media/painting.jpg",
-      title: "Расписываем керамику",
-      credit: "Poly Myakisheva · Pexels",
-    },
-    {
-      id: "colors",
-      src: "assets/media/colors.jpg",
-      title: "Выбираем любимые цвета",
-      credit: "Демонстрационная фотография · Pexels",
-    },
-    {
-      id: "together",
-      src: "assets/figma/ffa82.png",
-      title: "Маленькие моменты вместе",
-      credit: "Фотография из исходного макета",
-    },
-    {
-      id: "pottery-detail",
-      src: "assets/media/pottery.jpg",
-      title: "Всё начинается с рук",
-      credit: "cottonbro studio · Pexels",
-      position: "70% center",
-    },
-    {
-      id: "painting-detail",
-      src: "assets/media/painting.jpg",
-      title: "Последний штрих",
-      credit: "Poly Myakisheva · Pexels",
-      position: "center 65%",
-    },
-  ];
+  const photos = Array.from({ length: 6 }, (_, index) => ({
+    id: `grandma-${index + 1}`,
+    src: `assets/media/babylya/babylya${String(index + 1).padStart(2, "0")}.webp`,
+    title: `Семейное фото ${index + 1}`,
+    credit: "Фото из семейного архива",
+  }));
+  const carouselPhotos = Array.from({ length: 6 }, (_, index) => ({
+    id: `carousel-${index + 1}`,
+    src: `assets/media/photos_carusel/horizonal_scroll${String(index + 1).padStart(2, "0")}.webp`,
+    title: `Совместное творчество ${index + 1}`,
+    credit: "Фото совместного творчества",
+  }));
   const voiceTracks = [
     {
       title: "Голосовое сообщение",
@@ -148,7 +120,7 @@
     const button = event.target.closest("[data-photo]");
     if (button)
       openPhoto(
-        photos.find((p) => p.id === button.dataset.photo),
+        carouselPhotos.find((p) => p.id === button.dataset.photo),
         button,
       );
   });
